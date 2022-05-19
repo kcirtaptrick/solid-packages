@@ -1,19 +1,13 @@
 {
-    "extends": "../../tsconfig.build.json",
-    "compilerOptions": {
-        "composite": true,
-        "baseUrl": "./",
-        "paths": {},
-        "rootDir": "./src",
-        "outDir": "./dist"
-    },
-    "references": [],
-    "include": [
-        "types.d.ts",
-        "**/*.ts",
-        "**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": "./",
+    "paths": {},
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "references": [],
+  "include": ["types.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
 }
