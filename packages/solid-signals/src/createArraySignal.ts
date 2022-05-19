@@ -1,7 +1,4 @@
-import {
-  createSignal,
-  Signal,
-} from "solid-js";
+import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
 
 const arrayMutators = [
@@ -38,8 +35,15 @@ function createArraySignal<T>(value: T[], options?: SignalOptions<T[]>) {
   return createArraySignal.wrap(createSignal(value, options));
 }
 
-createArraySignal.wrap = <Sig extends Signal<any[]>>([state, setState]: Sig) => {
-  type T = Sig extends Signal<infer T> ? T extends any[] ? T[number] : never : never;
+createArraySignal.wrap = <Sig extends Signal<any[]>>([
+  state,
+  setState,
+]: Sig) => {
+  type T = Sig extends Signal<infer T>
+    ? T extends any[]
+      ? T[number]
+      : never
+    : never;
 
   const setArrayState = Object.assign(
     setState,
@@ -77,7 +81,7 @@ createArraySignal.wrap = <Sig extends Signal<any[]>>([state, setState]: Sig) => 
     ) as NativeMutators<T>
   );
 
-  type Base = Sig extends createSignal.ExtendedSetter.Result<T[], infer E> ? E : {};
+  type Base = createSignal.ExtendedSetter.ExtensionType<Sig>;
 
   return [state, setArrayState] as createArraySignal.Result<T, Base>;
 };
