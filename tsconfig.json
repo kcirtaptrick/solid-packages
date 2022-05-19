@@ -1,17 +1,15 @@
 {
-    "compilerOptions": {
-        "jsx": "preserve",
-        "baseUrl": "./packages",
-        "paths": {
-            "solid-signals/*": [
-                "solid-signals/src/*"
-            ]
-        }
-    },
-    "files": [],
-    "references": [
-        {
-            "path": "packages/solid-signals"
-        }
-    ]
+  "compilerOptions": {
+    "jsx": "preserve",
+    "baseUrl": "./packages",
+    "paths": {
+      "solid-signals/*": ["solid-signals/src/*"]
+    }
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "packages/solid-signals"
+    }
+  ]
 }

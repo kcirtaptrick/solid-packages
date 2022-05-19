@@ -10,6 +10,9 @@ declare global {
         value: T,
         options?: SignalOptions<T>
       ) => [Accessor<T>, Setter<T> & Extension];
+      export namespace ExtendedSetter {
+        type Result<T, Extension> = ReturnType<ExtendedSetter<T, Extension>>
+      }
     }
   }
 }

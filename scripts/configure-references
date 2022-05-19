@@ -8,10 +8,22 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const path = require("path");
 const isCI = require("is-ci");
+const prettier = require("prettier");
+
 const tsconfig = require("../tsconfig.json");
 
 tsconfig.files = [];
 tsconfig.references = [];
+
+const prettierrc = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "../.prettierrc")).toString("utf-8")
+);
+
+const format = (input) =>
+  prettier.format(input, {
+    parser: "json",
+    ...prettierrc,
+  });
 
 (async () => {
   if (isCI) {
@@ -52,9 +64,12 @@ tsconfig.references = [];
       }
       fs.writeFileSync(
         tsconfigPath,
-        JSON.stringify(workspaceConfig, undefined, 4)
+        format(JSON.stringify(workspaceConfig, undefined, 4))
       );
     }
   }
-  fs.writeFileSync("tsconfig.json", JSON.stringify(tsconfig, undefined, 4));
+  fs.writeFileSync(
+    "tsconfig.json",
+    format(JSON.stringify(tsconfig, undefined, 4))
+  );
 })();
