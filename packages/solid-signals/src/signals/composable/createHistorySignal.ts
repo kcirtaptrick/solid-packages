@@ -28,14 +28,14 @@ function createHistorySignal<T extends {}>(
 }
 
 createHistorySignal.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
-  const [state, setState] = signal;
+  const [state] = signal;
   type T = Sig extends Signal<infer T> ? T : never;
 
   const [history, setHistory] = createArraySignal([state() as T]);
   let offset = 0;
 
   return signalExtender(signal).extend<createHistorySignal.Extension<T>>(
-    () => ({
+    ([, setState]) => ({
       back() {
         if (offset >= history().length - 1) return false;
 
@@ -56,7 +56,7 @@ createHistorySignal.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
         return setHistory.splice(0, history.length - 1);
       },
     }),
-    (setStateAction) => {
+    ([, setState]) => (setStateAction) => {
       const value =
         typeof setStateAction === "function"
           ? (setStateAction as Function)(state())
