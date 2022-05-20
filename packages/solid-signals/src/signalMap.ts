@@ -1,6 +1,4 @@
-import { Accessor, createSignal, Setter, Signal } from "solid-js";
-import createArraySignal from "./createArraySignal";
-import createObjectSignal from "./createObjectSignal";
+import { Accessor } from "solid-js";
 
 type DeepIndex<Map, Index extends number> = {
   [Key in keyof Map]: Map[Key] extends any[]

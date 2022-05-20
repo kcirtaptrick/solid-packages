@@ -1,5 +1,6 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
+import { signalExtender } from "src/utils/signal";
 
 declare namespace createHistorySignal {
   export type Extension<T> = {
@@ -25,51 +26,45 @@ function createHistorySignal<T extends {}>(
   return createHistorySignal.wrap(createSignal(value, options));
 }
 
-createHistorySignal.wrap = <Sig extends Signal<{}>>([state, setState]: Sig) => {
+createHistorySignal.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
+  const [state, setState] = signal;
   type T = Sig extends Signal<infer T> ? T : never;
 
   const history: T[] = [];
   let offset = 0;
 
-  const extension: createHistorySignal.Extension<T> = {
-    back() {
-      if (offset >= history.length) return false;
+  return signalExtender(signal).extend<createHistorySignal.Extension<T>>(
+    ([, setState]) => ({
+      back() {
+        if (offset >= history.length) return false;
 
-      setHistoryState(() => history.at(-(++offset + 1)));
+        setState(() => history.at(-(++offset + 1)));
 
-      return true;
-    },
-    forward() {
-      if (offset < 1) return false;
+        return true;
+      },
+      forward() {
+        if (offset < 1) return false;
 
-      setHistoryState(() => history.at(-(--offset + 1)));
+        setState(() => history.at(-(--offset + 1)));
 
-      return false;
-    },
-    clearHistory() {
-      offset = 0;
-      // Clear all but last entry in history to maintain current state
-      return history.splice(0, history.length - 1);
-    },
-  };
-  const setHistoryState = Object.assign(
-    ((setStateAction) => {
+        return false;
+      },
+      clearHistory() {
+        offset = 0;
+        // Clear all but last entry in history to maintain current state
+        return history.splice(0, history.length - 1);
+      },
+    }),
+    (setStateAction) => {
       const value =
         typeof setStateAction === "function"
           ? (setStateAction as Function)(state())
           : setStateAction;
 
       history.push(value);
-      setState(value);
-    }) as typeof setState,
-    // This will add all extension properties without overriding callable
-    setState,
-    extension
+      return setState(value);
+    }
   );
-
-  type Base = createSignal.ExtendedSetter.ExtensionType<Sig>;
-
-  return [state, setHistoryState] as createHistorySignal.Result<T, Base>;
 };
 
 export default createHistorySignal;
