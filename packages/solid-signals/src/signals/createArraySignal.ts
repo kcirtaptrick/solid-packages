@@ -1,6 +1,6 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
-import { signalExtender } from "solid-signals/utils/signal";
+import { signalExtender } from "../utils/signal";
 
 const arrayMutators = [
   "copyWithin",
