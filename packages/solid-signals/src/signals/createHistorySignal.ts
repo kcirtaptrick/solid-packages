@@ -1,6 +1,6 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
-import { signalExtender } from "@util/signal";
+import { signalExtender } from "solid-signals/utils/signal";
 
 declare namespace createHistorySignal {
   export type Extension<T> = {

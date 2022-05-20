@@ -1,6 +1,6 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
-import { signalExtender } from "@util/signal";
+import { signalExtender } from "solid-signals/utils/signal";
 
 declare namespace createObjectSignal {
   export type Extension<T> = {
@@ -9,7 +9,7 @@ declare namespace createObjectSignal {
   export type Type<
     T extends Record<any, any>,
     Base = {}
-  > = createSignal.ExtendedSetter<T, Base & Extension<T>>;
+    > = createSignal.ExtendedSetter<T, Base & Extension<T>>;
 
   export type Result<T extends Record<any, any>, Base = {}> = ReturnType<
     Type<T, Base>
