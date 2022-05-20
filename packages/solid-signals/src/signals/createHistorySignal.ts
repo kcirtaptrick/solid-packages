@@ -1,6 +1,7 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
 import { signalExtender } from "../utils/signal";
+import createArraySignal from "./createArraySignal";
 
 declare namespace createHistorySignal {
   export type Extension<T> = {
@@ -30,29 +31,29 @@ createHistorySignal.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
   const [state, setState] = signal;
   type T = Sig extends Signal<infer T> ? T : never;
 
-  const history: T[] = [];
+  const [history, setHistory] = createArraySignal([state() as T]);
   let offset = 0;
 
   return signalExtender(signal).extend<createHistorySignal.Extension<T>>(
-    ([, setState]) => ({
+    () => ({
       back() {
-        if (offset >= history.length) return false;
+        if (offset >= history().length - 1) return false;
 
-        setState(() => history.at(-(++offset + 1)));
+        setState(() => history().at(-(++offset + 1)));
 
         return true;
       },
       forward() {
         if (offset < 1) return false;
 
-        setState(() => history.at(-(--offset + 1)));
+        setState(() => history().at(-(--offset + 1)));
 
         return false;
       },
       clearHistory() {
         offset = 0;
         // Clear all but last entry in history to maintain current state
-        return history.splice(0, history.length - 1);
+        return setHistory.splice(0, history.length - 1);
       },
     }),
     (setStateAction) => {
@@ -61,7 +62,11 @@ createHistorySignal.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
           ? (setStateAction as Function)(state())
           : setStateAction;
 
-      history.push(value);
+      if (offset > 0) {
+        setHistory.splice(-offset, Infinity)
+        offset = 0;
+      }
+      setHistory.push(value);
       return setState(value);
     }
   );

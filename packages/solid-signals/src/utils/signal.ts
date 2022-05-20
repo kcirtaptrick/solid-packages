@@ -11,7 +11,7 @@ export const signalExtender = <Sig extends Signal<{}>>(signal: Sig) => ({
     signal[1] = Object.assign(
       ...((baseSetter ? [baseSetter] : []) as [Sig[1]]),
       signal[1],
-      extension
+      extension(wireSignal(signal) as any)
     );
     return signal as unknown as [Sig[0], Sig[1] & Extension];
   },
