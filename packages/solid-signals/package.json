@@ -4,6 +4,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcirtaptrick/solid-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kcirtaptrick/solid-packages/issues"
+  },
   "peerDependencies": {
     "solid-js": "*"
   },

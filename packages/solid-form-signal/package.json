@@ -1,0 +1,22 @@
+{
+  "name": "solid-form-signal",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Patrick Wang <patrick.bohan.wang@gmail.com>",
+  "homepage": "https://github.com/kcirtaptrick/solid-packages#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcirtaptrick/solid-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kcirtaptrick/solid-packages/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.4.2"
+  }
+}

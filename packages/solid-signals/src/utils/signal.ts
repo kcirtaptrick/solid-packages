@@ -10,7 +10,10 @@ export const signalExtender = <Sig extends Signal<{}>>(signal: Sig) => ({
   ) {
     if (createBaseSetter) {
       // Pass signal with extensions before reassigning to baseSetter to prevent self call
-      const signalWithoutNewBase = [signal[0], ((setStateAction) => setterWithoutNewBase(setStateAction))] as Sig as unknown as ExtendedSignal
+      const signalWithoutNewBase = [
+        signal[0],
+        (setStateAction) => setterWithoutNewBase(setStateAction),
+      ] as Sig as unknown as ExtendedSignal;
       const setterWithoutNewBase = Object.assign(
         signal[1],
         extension(signalWithoutNewBase)

@@ -9,7 +9,7 @@ declare namespace createObjectSignal {
   export type Type<
     T extends Record<any, any>,
     Base = {}
-    > = createSignal.ExtendedSetter<T, Base & Extension<T>>;
+  > = createSignal.ExtendedSetter<T, Base & Extension<T>>;
 
   export type Result<T extends Record<any, any>, Base = {}> = ReturnType<
     Type<T, Base>

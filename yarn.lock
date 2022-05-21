@@ -3875,6 +3875,11 @@ solid-js@^1.4.1:
   resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.4.1.tgz#8714838a59e31695e7e6ecfe69494b1428d2dfb3"
   integrity sha512-ts480PccmUW9WAludSXET2dbBevjv+l6XMmN/OyG/a/xA8ZQoX4hNBN3gGhW785ZZv90fowbUSuSQUwOISm3YA==
 
+solid-js@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.4.2.tgz#2b4621de8cba01b8628b749deb63d097d66250f7"
+  integrity sha512-IU5yKuT8P/n5F5g8j1rTXqxUdPYmoZDk/074TG94AEYf/nyXAeG82BSge4/lLIbCfUcnGUJ6DRdebIjujOAYyg==
+
 sort-keys@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-2.0.0.tgz#658535584861ec97d730d6cf41822e1f56684128"

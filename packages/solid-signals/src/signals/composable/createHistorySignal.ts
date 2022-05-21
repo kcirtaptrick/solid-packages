@@ -56,19 +56,20 @@ createHistorySignal.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
         return setHistory.splice(0, history.length - 1);
       },
     }),
-    ([, setState]) => (setStateAction) => {
-      const value =
-        typeof setStateAction === "function"
-          ? (setStateAction as Function)(state())
-          : setStateAction;
+    ([, setState]) =>
+      (setStateAction) => {
+        const value =
+          typeof setStateAction === "function"
+            ? (setStateAction as Function)(state())
+            : setStateAction;
 
-      if (offset > 0) {
-        setHistory.splice(-offset, Infinity)
-        offset = 0;
+        if (offset > 0) {
+          setHistory.splice(-offset, Infinity);
+          offset = 0;
+        }
+        setHistory.push(value);
+        return setState(value);
       }
-      setHistory.push(value);
-      return setState(value);
-    }
   );
 };
 
