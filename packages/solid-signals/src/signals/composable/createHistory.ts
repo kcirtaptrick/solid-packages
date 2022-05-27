@@ -1,25 +1,35 @@
-import { createSignal, Signal } from "solid-js";
+import { createSignal, Signal, Accessor } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
 import { signalExtender } from "../../utils/signal";
 import createArray from "./createArray";
 
 declare namespace createHistory {
-  export type Extension<T> = {
-    history: {
-      back(): boolean;
-      forward(): boolean;
-      /**
-       * @returns discarded history
-       */
-      clear(): T[];
-    };
-  };
-  export type Type<T extends {}, Base = {}> = createSignal.ExtendedSetter<
-    T,
-    Base & Extension<T>
-  >;
+  export type Extensions<T> = [
+    {
+      history: Accessor<T[]> & {
+        forward: Accessor<T[]>;
+      };
+    },
+    {
+      history: {
+        back(): boolean;
+        forward(): boolean;
+        /**
+         * @returns discarded history
+         */
+        clear(): T[];
+      };
+    }
+  ];
+  export type Type<
+    T extends {},
+    Base extends [{}, {}] = [{}, {}]
+  > = createSignal.Extended<T, Base & Extensions<T>>;
 
-  export type Result<T extends {}, Base = {}> = ReturnType<Type<T, Base>>;
+  export type Result<
+    T extends {},
+    Base extends [{}, {}] = [{}, {}]
+  > = ReturnType<Type<T, Base>>;
 }
 
 function createHistory<T extends {}>(value: T, options?: SignalOptions<T>) {
@@ -31,46 +41,58 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
   type T = Sig extends Signal<infer T> ? T : never;
 
   const [history, setHistory] = createArray([state() as T]);
-  let offset = 0;
+  const [offset, setOffset] = createSignal(0);
 
-  return signalExtender(signal).extend<createHistory.Extension<T>>(
-    ([, setState]) => ({
-      history: {
-        back() {
-          if (offset >= history().length - 1) return false;
+  return signalExtender(signal).extend<createHistory.Extensions<T>>(
+    ([, setState]) => [
+      {
+        history: Object.assign(
+          () => history().slice(0, -offset() || undefined),
+          {
+            forward: () => history().slice(-offset() || history().length),
+          }
+        ),
+      },
+      {
+        history: {
+          back() {
+            if (offset() >= history().length - 1) return false;
 
-          setState(history().at(-(++offset + 1)) as {});
+            setOffset(offset() + 1);
+            setState(history().at(-(offset() + 1)) as {});
 
-          return true;
-        },
-        forward() {
-          if (offset < 1) return false;
+            return true;
+          },
+          forward() {
+            if (offset() < 1) return false;
 
-          setState(history().at(-(--offset + 1)) as {});
+            setOffset(offset() - 1);
+            setState(history().at(-(offset() + 1)) as {});
 
-          return true;
-        },
-        clear() {
-          offset = 0;
+            return true;
+          },
+          clear() {
+            setOffset(0);
 
-          const res = history();
+            const res = history();
 
-          setHistory([state() as T]);
+            setHistory([state() as T]);
 
-          return res;
+            return res;
+          },
         },
       },
-    }),
-    ([, setState]) =>
+    ],
+    ([state, setState]) =>
       (setStateAction) => {
         const value =
           typeof setStateAction === "function"
             ? (setStateAction as Function)(state())
             : setStateAction;
 
-        if (offset > 0) {
-          setHistory(history().slice(0, -offset));
-          offset = 0;
+        if (offset() > 0) {
+          setHistory(history().slice(0, -offset()));
+          setOffset(0);
         }
 
         setHistory.push(value);

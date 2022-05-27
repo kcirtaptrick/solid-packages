@@ -1,9 +1,10 @@
 import { createRoot } from "solid-js";
 import { suite } from "uvu";
 import * as assert from "uvu/assert";
+import createArray from "./createArray";
 import createHistory from "./createHistory";
 
-const test = suite("createArray");
+const test = suite("createHistory");
 
 test("Creates history signal", () => {
   createRoot((dispose) => {
@@ -15,7 +16,7 @@ test("Creates history signal", () => {
   });
 });
 
-test("Preserve solid setter", () => {
+test("Preserve solid signal", () => {
   createRoot((dispose) => {
     const [value, setValue] = createHistory(0);
 
@@ -30,9 +31,52 @@ test("Preserve solid setter", () => {
   });
 });
 
+test("Provides correct history value", () => {
+  createRoot((dispose) => {
+    const [value, setValue] = createHistory(0);
+
+    setValue(1);
+    setValue(2);
+    setValue(3);
+    assert.equal(value.history(), [0, 1, 2, 3]);
+
+    setValue.history.back();
+    assert.equal(value.history(), [0, 1, 2]);
+    assert.equal(value.history.forward(), [3]);
+
+    setValue.history.back();
+    setValue.history.back();
+    assert.equal(value.history(), [0]);
+    assert.equal(value.history.forward(), [1, 2, 3]);
+
+    // Back on first value should not change history
+    setValue.history.back();
+    assert.equal(value.history(), [0]);
+    assert.equal(value.history.forward(), [1, 2, 3]);
+
+    setValue.history.forward();
+    assert.equal(value.history(), [0, 1]);
+    assert.equal(value.history.forward(), [2, 3]);
+
+    setValue.history.forward();
+    setValue.history.forward();
+    assert.equal(value.history(), [0, 1, 2, 3]);
+    assert.equal(value.history.forward(), []);
+
+    // Back on last value should not change history
+    setValue.history.forward();
+    assert.equal(value.history(), [0, 1, 2, 3]);
+    assert.equal(value.history.forward(), []);
+
+    dispose();
+  });
+});
+
 test("history.back: Sets state to previous history value", () => {
   createRoot((dispose) => {
     const [value, setValue] = createHistory(0);
+
+    assert.is(setValue.history.back(), false);
 
     setValue(1);
     setValue(2);
@@ -54,6 +98,8 @@ test("history.back: Sets state to previous history value", () => {
 test("history.forward: Sets state to next history value", () => {
   createRoot((dispose) => {
     const [value, setValue] = createHistory(0);
+
+    assert.is(setValue.history.forward(), false);
 
     setValue(1);
     setValue(2);
@@ -159,13 +205,53 @@ test("Setting value clears forward history", () => {
     setValue.history.back();
     setValue(10);
     assert.is(setValue.history.forward(), false);
-    // assert.equal(value.history.all(), [0, 1, 2, 10]);
+    assert.equal(value.history(), [0, 1, 2, 10]);
 
     setValue.history.back();
     setValue.history.back();
     setValue(10);
     assert.is(setValue.history.forward(), false);
-    // assert.equal(value.history.all(), [0, 1, 10]);
+    assert.equal(value.history(), [0, 1, 10]);
+
+    dispose();
+  });
+});
+
+test("Extends other signals (createArray)", () => {
+  createRoot((dispose) => {
+    const [array, setArray] = createHistory.wrap(createArray<number>([]));
+
+    assert.equal(array(), []);
+
+    assert.is(setArray.push(1), 1);
+    assert.is(setArray.push(2), 2);
+    assert.equal(array(), [1, 2]);
+
+    assert.is(setArray.unshift(0), 3);
+    assert.equal(array(), [0, 1, 2]);
+
+    assert.is(setArray.history.back(), true);
+    assert.equal(array(), [1, 2]);
+
+    assert.is(setArray.history.back(), true);
+    assert.is(setArray.history.back(), true);
+    assert.equal(array(), []);
+
+    assert.is(setArray.history.back(), false);
+
+    assert.is(setArray.history.forward(), true);
+    assert.equal(array(), [1]);
+
+    assert.is(setArray.history.forward(), true);
+    assert.is(setArray.history.forward(), true);
+    assert.equal(array(), [0, 1, 2]);
+
+    assert.is(setArray.history.forward(), false);
+
+    assert.equal(setArray.history.clear(), [[], [1], [1, 2], [0, 1, 2]]);
+
+    assert.is(setArray.history.back(), false);
+    assert.is(setArray.history.forward(), false);
 
     dispose();
   });
