@@ -17,6 +17,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "peerDependencies": {
-    "solid-js": "^1.4.2"
+    "solid-js": "^1.4.2",
+    "solid-signals": ">=0.0.11"
   }
 }

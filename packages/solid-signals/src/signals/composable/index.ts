@@ -1,3 +1,3 @@
-export { default as createObjectSignal } from "./createObjectSignal";
-export { default as createArraySignal } from "./createArraySignal";
-export { default as createHistorySignal } from "./createHistorySignal";
+export { default as createObject } from "./createObject";
+export { default as createArray } from "./createArray";
+export { default as createHistory } from "./createHistory";

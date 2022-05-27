@@ -2,7 +2,7 @@ import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
 import { signalExtender } from "../../utils/signal";
 
-declare namespace createObjectSignal {
+declare namespace createObject {
   export type Extension<T> = {
     update(updates: Partial<T>): void;
   };
@@ -16,19 +16,17 @@ declare namespace createObjectSignal {
   >;
 }
 
-function createObjectSignal<T extends Record<any, any>>(
+function createObject<T extends Record<any, any>>(
   value: T,
   options?: SignalOptions<T>
 ) {
-  return createObjectSignal.wrap(createSignal(value, options));
+  return createObject.wrap(createSignal(value, options));
 }
 
-createObjectSignal.wrap = <Sig extends Signal<Record<any, any>>>(
-  signal: Sig
-) => {
+createObject.wrap = <Sig extends Signal<Record<any, any>>>(signal: Sig) => {
   type T = Sig extends Signal<infer T> ? T : never;
 
-  return signalExtender(signal).extend<createObjectSignal.Extension<T>>(
+  return signalExtender(signal).extend<createObject.Extension<T>>(
     ([state, setState]) => ({
       update(updates) {
         setState(() => ({ ...state(), ...updates }));
@@ -37,4 +35,4 @@ createObjectSignal.wrap = <Sig extends Signal<Record<any, any>>>(
   );
 };
 
-export default createObjectSignal;
+export default createObject;

@@ -19,7 +19,8 @@
     "prepack": "yarn build",
     "build": "yarn clean && yarn compile",
     "compile": "tsc --build && cp \"./package.json\" ./dist/",
-    "test": "echo 'no test'",
+    "test": "uvu -r tsm src .*\\.test\\.ts",
+    "test:watch": "watchlist src -- yarn uvu -r tsm src .*\\.test\\.ts",
     "lint": "eslint \"./src/**/*.tsx?\" --max-warnings=0"
   },
   "devDependencies": {

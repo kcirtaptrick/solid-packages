@@ -5,6 +5,9 @@
   "files": [],
   "references": [
     {
+      "path": "packages/solid-form-signal"
+    },
+    {
       "path": "packages/solid-signals"
     }
   ]
