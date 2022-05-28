@@ -15,17 +15,6 @@ declare global {
           Extended<T, Extensions>
         >;
       }
-      export type ExtendedSetter<T, Extension> = (
-        value: T,
-        options?: SignalOptions<T>
-      ) => [Accessor<T>, Setter<T> & Extension];
-      export namespace ExtendedSetter {
-        type Result<T, Extension> = ReturnType<ExtendedSetter<T, Extension>>;
-        type ExtensionType<Sig extends Signal<{}>> =
-          Sig extends createSignal.ExtendedSetter.Result<infer _, infer E>
-            ? E
-            : {};
-      }
     }
   }
 }
