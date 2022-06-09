@@ -1,6 +1,6 @@
 {
   "name": "solid-signals",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Composable signals for SolidJS",
   "author": "Patrick Wang <patrick.bohan.wang@gmail.com>",
   "homepage": "https://github.com/kcirtaptrick/solid-packages/tree/master/packages/solid-signals#readme",
