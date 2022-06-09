@@ -1,4 +1,4 @@
-import { createSignal, Signal, Accessor } from "solid-js";
+import { createSignal, Signal, Accessor, Setter } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
 import { signalExtender } from "../../utils/signal";
 import createArray from "./createArray";
@@ -11,7 +11,7 @@ declare namespace createHistory {
       };
     },
     {
-      history: {
+      history: Setter<T[]> & {
         back(): boolean;
         forward(): boolean;
         /**
@@ -54,33 +54,45 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
         ),
       },
       {
-        history: {
-          back() {
-            if (offset() >= history().length - 1) return false;
+        history: Object.assign(
+          ((setStateAction) => {
+            const value: T[] =
+              typeof setStateAction === "function"
+                ? (setStateAction as Function)(state())
+                : setStateAction;
 
-            setOffset(offset() + 1);
-            setState(history().at(-(offset() + 1)) as {});
-
-            return true;
-          },
-          forward() {
-            if (offset() < 1) return false;
-
-            setOffset(offset() - 1);
-            setState(history().at(-(offset() + 1)) as {});
-
-            return true;
-          },
-          clear() {
             setOffset(0);
+            setHistory(value);
+            setState(value.at(-1) as {});
+          }) as Setter<T[]>,
+          {
+            back() {
+              if (offset() >= history().length - 1) return false;
 
-            const res = history();
+              setOffset(offset() + 1);
+              setState(history().at(-(offset() + 1)) as {});
 
-            setHistory([state() as T]);
+              return true;
+            },
+            forward() {
+              if (offset() < 1) return false;
 
-            return res;
-          },
-        },
+              setOffset(offset() - 1);
+              setState(history().at(-(offset() + 1)) as {});
+
+              return true;
+            },
+            clear() {
+              setOffset(0);
+
+              const res = history();
+
+              setHistory([state() as T]);
+
+              return res;
+            },
+          }
+        ),
       },
     ],
     ([state, setState]) =>

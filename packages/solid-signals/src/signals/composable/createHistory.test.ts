@@ -31,47 +31,6 @@ test("Preserve solid signal", () => {
   });
 });
 
-test("Provides correct history value", () => {
-  createRoot((dispose) => {
-    const [value, setValue] = createHistory(0);
-
-    setValue(1);
-    setValue(2);
-    setValue(3);
-    assert.equal(value.history(), [0, 1, 2, 3]);
-
-    setValue.history.back();
-    assert.equal(value.history(), [0, 1, 2]);
-    assert.equal(value.history.forward(), [3]);
-
-    setValue.history.back();
-    setValue.history.back();
-    assert.equal(value.history(), [0]);
-    assert.equal(value.history.forward(), [1, 2, 3]);
-
-    // Back on first value should not change history
-    setValue.history.back();
-    assert.equal(value.history(), [0]);
-    assert.equal(value.history.forward(), [1, 2, 3]);
-
-    setValue.history.forward();
-    assert.equal(value.history(), [0, 1]);
-    assert.equal(value.history.forward(), [2, 3]);
-
-    setValue.history.forward();
-    setValue.history.forward();
-    assert.equal(value.history(), [0, 1, 2, 3]);
-    assert.equal(value.history.forward(), []);
-
-    // Back on last value should not change history
-    setValue.history.forward();
-    assert.equal(value.history(), [0, 1, 2, 3]);
-    assert.equal(value.history.forward(), []);
-
-    dispose();
-  });
-});
-
 test("history.back: Sets state to previous history value", () => {
   createRoot((dispose) => {
     const [value, setValue] = createHistory(0);
@@ -212,6 +171,76 @@ test("Setting value clears forward history", () => {
     setValue(10);
     assert.is(setValue.history.forward(), false);
     assert.equal(value.history(), [0, 1, 10]);
+
+    dispose();
+  });
+});
+
+test("Provides correct history value", () => {
+  createRoot((dispose) => {
+    const [value, setValue] = createHistory(0);
+
+    setValue(1);
+    setValue(2);
+    setValue(3);
+    assert.equal(value.history(), [0, 1, 2, 3]);
+
+    setValue.history.back();
+    assert.equal(value.history(), [0, 1, 2]);
+    assert.equal(value.history.forward(), [3]);
+
+    setValue.history.back();
+    setValue.history.back();
+    assert.equal(value.history(), [0]);
+    assert.equal(value.history.forward(), [1, 2, 3]);
+
+    // Back on first value should not change history
+    setValue.history.back();
+    assert.equal(value.history(), [0]);
+    assert.equal(value.history.forward(), [1, 2, 3]);
+
+    setValue.history.forward();
+    assert.equal(value.history(), [0, 1]);
+    assert.equal(value.history.forward(), [2, 3]);
+
+    setValue.history.forward();
+    setValue.history.forward();
+    assert.equal(value.history(), [0, 1, 2, 3]);
+    assert.equal(value.history.forward(), []);
+
+    // Back on last value should not change history
+    setValue.history.forward();
+    assert.equal(value.history(), [0, 1, 2, 3]);
+    assert.equal(value.history.forward(), []);
+
+    setValue.history.clear();
+    assert.equal(value.history(), [3]);
+    assert.equal(value.history.forward(), []);
+
+    dispose();
+  });
+});
+
+test("history setter populates history", () => {
+  createRoot((dispose) => {
+    const [value, setValue] = createHistory(0);
+
+    setValue.history([0, 1, 2, 3]);
+
+    assert.equal(value.history(), [0, 1, 2, 3]);
+    assert.is(value(), 3);
+
+    setValue.history.back();
+    setValue.history.back();
+    assert.equal(value.history(), [0, 1]);
+
+    setValue.history([4, 5, 6, 7]);
+    assert.equal(value.history(), [4, 5, 6, 7]);
+    assert.is(value(), 7);
+
+    setValue.history.back();
+    assert.equal(value.history(), [4, 5, 6]);
+    assert.is(value(), 6);
 
     dispose();
   });
