@@ -12,6 +12,6 @@ $ npm install solid-signals
 
 ## Signals
 
-- [createArray](./src/signals/composable/createArray/README.md)
-- [createHistory](./src/signals/composable/createHistory/README.md)
-- [createObject](./src/signals/composable/createObject/README.md)
+- [createArray](/packages/solid-signals/src/signals/composable/createArray/README.md)
+- [createHistory](/packages/solid-signals/src/signals/composable/createHistory/README.md)
+- [createObject](/packages/solid-signals/src/signals/composable/createObject/README.md)

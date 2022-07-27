@@ -25,7 +25,9 @@ export const signalExtender = <Sig extends Signal<{}>>(signal: Sig) => ({
           signal[0],
           () => {
             // To be reassigned
-            throw new Error("Cannot call setter in extensions creator");
+            throw new Error(
+              "Cannot call setter immediately in .extend callback, must be used in extension"
+            );
           },
         ] as unknown as ExtendedSignal;
 
