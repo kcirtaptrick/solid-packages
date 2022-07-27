@@ -2,7 +2,7 @@ import { createRoot } from "solid-js";
 import { suite } from "uvu";
 import * as assert from "uvu/assert";
 import createArray from "./createArray";
-import createHistory from "./createHistory";
+import createHistory from "../createHistory";
 
 const test = suite("createArray");
 

@@ -1,6 +1,6 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
-import { signalExtender } from "../../utils/signal";
+import { signalExtender } from "../../../utils/signal";
 
 declare namespace createObject {
   export type Extensions<T> = [

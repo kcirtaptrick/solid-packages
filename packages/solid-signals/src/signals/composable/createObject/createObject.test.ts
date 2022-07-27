@@ -1,7 +1,7 @@
 import { createRoot } from "solid-js";
 import { suite } from "uvu";
 import * as assert from "uvu/assert";
-import createHistory from "./createHistory";
+import createHistory from "../createHistory";
 import createObject from "./createObject";
 
 const test = suite("createObject");
