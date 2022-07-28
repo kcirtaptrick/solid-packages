@@ -82,7 +82,7 @@ createArray.wrap = <Sig extends Signal<any[]>>(signal: Sig) => {
             (...args: Parameters<T[][Method]>) => {
               const [...s] = state();
 
-              // @ts-ignore
+              // @ts-expect-error
               const res = s[method](...args);
               setState(s);
 
