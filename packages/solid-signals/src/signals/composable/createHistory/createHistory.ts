@@ -6,13 +6,25 @@ import createArray from "../createArray";
 declare namespace createHistory {
   export type Extensions<T> = [
     {
+      /**
+       * @returns backward history, does not include existing forward history
+       */
       history: Accessor<T[]> & {
+        /**
+         * @returns forward history
+         */
         forward: Accessor<T[]>;
       };
     },
     {
       history: Setter<T[]> & {
+        /**
+         * @returns if operation was able to perform
+         */
         back(): boolean;
+        /**
+         * @returns if operation was able to perform
+         */
         forward(): boolean;
         /**
          * @returns discarded history

@@ -104,7 +104,7 @@ array: []
 history: [[]]
 ```
 
-<h2 id="reference">Reference</h2>
+## Reference
 
 ### `state.history(): T[]`
 

@@ -85,7 +85,7 @@ array: []
 
 ```
 
-<h2 id="reference">Reference</h2>
+## Reference
 
 ### `setState.at(index: number, value: T): T`
 

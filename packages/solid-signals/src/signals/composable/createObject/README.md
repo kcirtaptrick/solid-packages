@@ -91,7 +91,7 @@ object: { "prop1": "updated", "prop2": "value2" }
 object: { "prop1": "value1", "prop2": "value2" }
 ```
 
-<h2 id="reference">Reference</h2>
+## Reference
 
 ### `setState.update(updates: Partial<T>): void`
 
