@@ -6,6 +6,10 @@ declare namespace createObject {
   export type Extensions<T> = [
     {},
     {
+      /**
+       * Shallow merges state with updates
+       * @param updates - New properties to be set
+       */
       update(updates: Partial<T>): void;
     }
   ];
