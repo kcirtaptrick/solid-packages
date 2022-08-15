@@ -1,6 +1,6 @@
 # Composable signal: createObject
 
-Extends signal setter with `update` method. See [Reference](#reference) for more details.
+Extends signal setter with `assign` method. See [Reference](#reference) for more details.
 
 ## Usage
 
@@ -15,14 +15,14 @@ function ExampleComponent {
   return (
     <div>
       <button onClick={() => {
-        setObject.update({ prop1: "updated" });
+        setObject.assign({ prop1: "updated" });
       }}>
-        Update prop1
+        Assign prop1
       </button>
       <button onClick={() => {
-        setObject.update({ prop2: "updated" });
+        setObject.assign({ prop2: "updated" });
       }}>
-        Update prop2
+        Assign prop2
       </button>
       object: {JSON.stringify(object())}
     </div>
@@ -35,10 +35,10 @@ function ExampleComponent {
 ```
 object: { "prop1": "value1", "prop2": "value2" }
 
-[Click: Update prop1]
+[Click: Assign prop1]
 object: { "prop1": "updated", "prop2": "value2" }
 
-[Click: Update prop2]
+[Click: Assign prop2]
 object: { "prop1": "updated", "prop2": "updated" }
 ```
 
@@ -53,14 +53,14 @@ function ExampleComponent {
   return (
     <div>
       <button onClick={() => {
-        setObject.update({ prop1: "updated" });
+        setObject.assign({ prop1: "updated" });
       }}>
-        Update prop1
+        Assign prop1
       </button>
       <button onClick={() => {
-        setObject.update({ prop2: "updated" });
+        setObject.assign({ prop2: "updated" });
       }}>
-        Update prop2
+        Assign prop2
       </button>
       <button onClick={() => {
         setObject.history.back();
@@ -78,10 +78,10 @@ function ExampleComponent {
 ```
 object: { "prop1": "value1", "prop2": "value2" }
 
-[Click: Update prop1]
+[Click: Assign prop1]
 object: { "prop1": "updated", "prop2": "value2" }
 
-[Click: Update prop2]
+[Click: Assign prop2]
 object: { "prop1": "updated", "prop2": "updated" }
 
 [Click: Back]
@@ -93,6 +93,6 @@ object: { "prop1": "value1", "prop2": "value2" }
 
 ## Reference
 
-### `setState.update(updates: Partial<T>): void`
+### `setState.assign(updates: Partial<T>): void`
 
 Merges given object with current state. Allows for specific property updates without affecting other properties

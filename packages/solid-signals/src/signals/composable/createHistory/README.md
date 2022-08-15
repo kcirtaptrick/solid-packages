@@ -41,7 +41,7 @@ history: [0]
 number: 1
 history: [0, 1]
 
-[Click: Update prop2]
+[Click: Increment]
 number: 2
 history: [0, 1, 2]
 
