@@ -49,3 +49,27 @@ export const signalExtender = <Sig extends Signal<{}>>(signal: Sig) => ({
     return signal as unknown as ExtendedSignal;
   },
 });
+
+export type NativeMutators<T, Methods extends keyof T> = {
+  [Method in Methods]: T[Method];
+};
+
+export const getNativeExtensions = <T, Methods extends keyof T>(
+  makeCopy: () => T,
+  setState: (state: T) => void,
+  mutators: readonly Methods[]
+) =>
+  Object.fromEntries(
+    mutators.map(<Method extends Methods>(method: Method) => [
+      method,
+      (...args: T extends (...args: infer Args) => any ? Args : never) => {
+        const s = makeCopy();
+
+        // @ts-expect-error
+        const res = s[method](...args);
+        setState(s);
+
+        return res;
+      },
+    ])
+  ) as unknown as NativeMutators<T, Methods>;

@@ -61,21 +61,47 @@ test("Extends other signals (createHistory)", () => {
     setObject.assign({ a: "a2" });
     setObject.assign({ a: "a3" });
     assert.equal(object(), { a: "a3" });
+    assert.equal(object.history(), [
+      { a: "a" },
+      { a: "a1" },
+      { a: "a2" },
+      { a: "a3" },
+    ]);
+    assert.equal(object.history.forward(), []);
 
-    setObject.history.back();
+    assert.is(setObject.history.back(), true);
     assert.equal(object(), { a: "a2" });
+    assert.equal(object.history(), [{ a: "a" }, { a: "a1" }, { a: "a2" }]);
+    assert.equal(object.history.forward(), [{ a: "a3" }]);
 
-    setObject.history.back();
-    setObject.history.back();
+    assert.is(setObject.history.back(), true);
+    assert.is(setObject.history.back(), true);
     assert.equal(object(), { a: "a" });
+    assert.equal(object.history(), [{ a: "a" }]);
+    assert.equal(object.history.forward(), [
+      { a: "a1" },
+      { a: "a2" },
+      { a: "a3" },
+    ]);
+
     assert.is(setObject.history.back(), false);
 
-    setObject.history.forward();
+    assert.is(setObject.history.forward(), true);
     assert.equal(object(), { a: "a1" });
+    assert.equal(object.history(), [{ a: "a" }, { a: "a1" }]);
+    assert.equal(object.history.forward(), [{ a: "a2" }, { a: "a3" }]);
 
-    setObject.history.forward();
-    setObject.history.forward();
+    assert.is(setObject.history.forward(), true);
+    assert.is(setObject.history.forward(), true);
     assert.equal(object(), { a: "a3" });
+    assert.equal(object.history(), [
+      { a: "a" },
+      { a: "a1" },
+      { a: "a2" },
+      { a: "a3" },
+    ]);
+    assert.equal(object.history.forward(), []);
+
     assert.is(setObject.history.forward(), false);
 
     dispose();

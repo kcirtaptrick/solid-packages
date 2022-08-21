@@ -1,6 +1,10 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
-import { signalExtender } from "../../../utils/signal";
+import {
+  getNativeExtensions,
+  NativeMutators,
+  signalExtender,
+} from "../../../utils/signal";
 
 const arrayMutators = [
   "copyWithin",
@@ -14,19 +18,13 @@ const arrayMutators = [
   "unshift",
 ] as const;
 
-type Methods = typeof arrayMutators[number];
-
-type NativeMutators<T> = {
-  [Method in Methods]: T[][Method];
-};
-
 declare namespace createArray {
   export type Extensions<T> = [
     {},
     {
       at(index: number, value: T): T;
       find(predicate: (item: T) => boolean, value: T): T | undefined;
-    } & NativeMutators<T>
+    } & NativeMutators<T[], typeof arrayMutators[number]>
   ];
   export type Type<T, Base extends [{}, {}] = [{}, {}]> = createSignal.Extended<
     T[],
@@ -76,20 +74,7 @@ createArray.wrap = <Sig extends Signal<any[]>>(signal: Sig) => {
 
           return state()[index];
         },
-        ...(Object.fromEntries(
-          arrayMutators.map(<Method extends Methods>(method: Method) => [
-            method,
-            (...args: Parameters<T[][Method]>) => {
-              const [...s] = state();
-
-              // @ts-expect-error
-              const res = s[method](...args);
-              setState(s);
-
-              return res;
-            },
-          ])
-        ) as NativeMutators<T>),
+        ...getNativeExtensions(() => [...state()], setState, arrayMutators),
       },
     ]
   );
