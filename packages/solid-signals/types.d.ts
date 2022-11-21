@@ -1,6 +1,6 @@
 // Solid
 declare global {
-  declare module "solid-js" {
+  module "solid-js" {
     import { Signal, Accessor, Setter } from "solid-js";
     import { SignalOptions } from "solid-js/types/reactive/signal";
 
