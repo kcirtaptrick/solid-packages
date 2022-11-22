@@ -1,4 +1,4 @@
-export * from "./signals";
+export * from "./signals/index";
 export { default as signalMap } from "./signalMap";
 export { signalExtender } from "./utils/signal";
 
