@@ -27,23 +27,23 @@ test("Preserve Solid setter", () => {
   });
 });
 
-test("assign: Shallow merges state with updates", () => {
+test("update: Shallow merges state with updates", () => {
   createRoot((dispose) => {
     const [object, setObject] = createObject({ a: "a", b: "b" });
 
-    const res = setObject.assign({
+    const res = setObject.update({
       a: "a1",
     });
     assert.equal(object(), { a: "a1", b: "b" });
     // Returns new state
     assert.is(res, object());
 
-    setObject.assign({
+    setObject.update({
       b: "b1",
     });
     assert.equal(object(), { a: "a1", b: "b1" });
 
-    setObject.assign({
+    setObject.update({
       a: "a2",
       b: "b2",
     });
@@ -57,9 +57,9 @@ test("Extends other signals (createHistory)", () => {
   createRoot((dispose) => {
     const [object, setObject] = createObject.wrap(createHistory({ a: "a" }));
 
-    setObject.assign({ a: "a1" });
-    setObject.assign({ a: "a2" });
-    setObject.assign({ a: "a3" });
+    setObject.update({ a: "a1" });
+    setObject.update({ a: "a2" });
+    setObject.update({ a: "a3" });
     assert.equal(object(), { a: "a3" });
     assert.equal(object.history(), [
       { a: "a" },

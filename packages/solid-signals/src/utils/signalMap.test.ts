@@ -84,7 +84,7 @@ test("Works with extended signals", () => {
     assert.equal(map.a(), { p1: 0 });
     assert.equal(map.b.c(), [0]);
 
-    setMap.a.assign({ p1: 1 });
+    setMap.a.update({ p1: 1 });
     setMap.b.c.push(1);
 
     assert.equal(map.a(), { p1: 1 });

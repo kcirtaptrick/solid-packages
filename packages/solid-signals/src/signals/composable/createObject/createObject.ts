@@ -12,7 +12,7 @@ declare namespace createObject {
        * Shallow merges state with updates
        * @param updates - New properties to be set
        */
-      assign(updates: Partial<T>): void;
+      update(updates: Partial<T>): void;
     }
   ];
   export type Type<
@@ -40,7 +40,7 @@ createObject.wrap = <Sig extends Signal<AnyObject>>(signal: Sig) => {
     ([state, setState]) => [
       {},
       {
-        assign(updates) {
+        update(updates) {
           setState(() => ({ ...state(), ...updates }));
           return state();
         },
