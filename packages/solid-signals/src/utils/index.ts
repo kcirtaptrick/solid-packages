@@ -1,3 +1,3 @@
 export { signalExtender } from "./signal";
-export { default as signalMap } from "./signalMap";
-export { default as signalArray } from "./signalMap";
+export { signalMap } from "./signalMap";
+export { signalArray } from "./signalArray";
