@@ -1,2 +1,2 @@
-export { default } from "./createHistory";
-export * from "./createHistory";
+export { default } from "./createHistory.js";
+export * from "./createHistory.js";

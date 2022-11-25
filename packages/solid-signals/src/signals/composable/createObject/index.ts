@@ -1,2 +1,2 @@
-export { default } from "./createObject";
-export * from "./createObject";
+export { default } from "./createObject.js";
+export * from "./createObject.js";
