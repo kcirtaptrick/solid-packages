@@ -1,5 +1,5 @@
-export * from "./signals";
-export * from "./utils";
+export * from "./signals/index.js";
+export * from "./utils/index.js";
 
 import { createSignal } from "solid-js";
 export type ExtendedSignal<
