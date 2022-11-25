@@ -4,7 +4,7 @@ import {
   getNativeExtensions,
   NativeMutators,
   signalExtender,
-} from "../../../utils/signal";
+} from "../../../utils/signal.js";
 
 const mapMutators = ["set", "delete", "clear"] as const;
 
