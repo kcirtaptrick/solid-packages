@@ -30,7 +30,7 @@ export function signalArray<Array extends RecursiveArray<Signal<{}>>>(
   for (let i = 0; i < array.length; i++) {
     const item = array[i];
     [state[i], setState[i]] =
-      typeof item[0] === "function" ? item : signalArray(item as Array);
+      item[0] instanceof Array ? signalArray(item as Array) : item;
   }
 
   return [state, setState];
