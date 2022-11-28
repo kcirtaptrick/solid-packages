@@ -23,6 +23,11 @@ test("Preserve Solid setter", () => {
     setObject({ a: "a1" });
     assert.equal(object(), { a: "a1" });
 
+    setObject(({ a }) => ({
+      a: `${a}2`,
+    }));
+    assert.equal(object(), { a: "a12" });
+
     dispose();
   });
 });
@@ -48,6 +53,9 @@ test("update: Shallow merges state with updates", () => {
       b: "b2",
     });
     assert.equal(object(), { a: "a2", b: "b2" });
+
+    setObject.update(({ a }) => ({ a: `${a}3` }));
+    assert.equal(object(), { a: "a23", b: "b2" });
 
     dispose();
   });
