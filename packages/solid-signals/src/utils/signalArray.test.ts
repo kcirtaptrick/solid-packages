@@ -2,7 +2,7 @@ import { createRoot, createSignal } from "solid-js";
 import { suite } from "uvu";
 import * as assert from "uvu/assert";
 import { createArray, createHistory } from "../signals";
-import { signalArray } from "./signalArray";
+import signalArray from "./signalArray";
 
 const test1 = suite("signalMap: single-level");
 const testn = suite("signalMap: multi-level");

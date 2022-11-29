@@ -10,7 +10,7 @@ type RecursiveObject<T> = {
   [key: string | number | symbol]: T | RecursiveObject<T>;
 };
 
-export function signalMap<Map extends RecursiveObject<Signal<{}>>>(
+export default function signalMap<Map extends RecursiveObject<Signal<{}>>>(
   map: Map
 ): [DeepIndex<Map, 0>, DeepIndex<Map, 1>] {
   const state: any = {};

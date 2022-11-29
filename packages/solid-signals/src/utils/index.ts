@@ -1,3 +1,3 @@
 export { signalExtender } from "./signal.js";
-export { signalMap } from "./signalMap.js";
-export { signalArray } from "./signalArray.js";
+export { default as signalMap } from "./signalMap.js";
+export { default as signalArray } from "./signalArray.js";
