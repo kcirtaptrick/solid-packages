@@ -1499,6 +1499,11 @@ cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+csstype@^3.1.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
+  integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
+
 dargs@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/dargs/-/dargs-7.0.0.tgz#04015c41de0bcb69ec84050f3d9be0caf8d6d5cc"
@@ -4131,10 +4136,12 @@ socks@^2.3.3, socks@^2.6.2:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
-solid-js@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.4.1.tgz#8714838a59e31695e7e6ecfe69494b1428d2dfb3"
-  integrity sha512-ts480PccmUW9WAludSXET2dbBevjv+l6XMmN/OyG/a/xA8ZQoX4hNBN3gGhW785ZZv90fowbUSuSQUwOISm3YA==
+solid-js@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.6.4.tgz#6baf96941d78a35f0a4ace6cb4ff9b29498e90b5"
+  integrity sha512-IfJJ1ejAcRTOEB0XXk/J8tzvVNZXAdEuHtWQwTXefUteZPGWOl4aVSOrkoj3y1bjwDayqok3+Vv3TV/j4IhKyw==
+  dependencies:
+    csstype "^3.1.0"
 
 sort-keys@^2.0.0:
   version "2.0.0"

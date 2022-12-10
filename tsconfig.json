@@ -9,6 +9,9 @@
     },
     {
       "path": "packages/solid-signals"
+    },
+    {
+      "path": "packages/solid-u"
     }
   ]
 }

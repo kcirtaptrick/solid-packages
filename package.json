@@ -9,7 +9,8 @@
     "prepare": "./scripts/configure-references",
     "build": "lerna run build --stream",
     "lint": "lerna run lint --stream --parallel",
-    "signals": "yarn workspace solid-signals"
+    "signals": "yarn workspace solid-signals",
+    "utils": "yarn workspace solid-u"
   },
   "devDependencies": {
     "lerna": "^4.0.0",
