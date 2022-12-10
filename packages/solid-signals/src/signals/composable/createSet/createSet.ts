@@ -1,5 +1,4 @@
-import { createSignal } from "solid-js";
-import { Signal, SignalOptions } from "solid-js/types/reactive/signal";
+import { createSignal, Signal } from "solid-js";
 import {
   getNativeExtensions,
   NativeMutators,
@@ -28,7 +27,7 @@ declare namespace createSet {
 
 function createSet<T = any>(
   value?: Set<T> | T[],
-  options?: SignalOptions<Set<T>>
+  options?: createSignal.Options<Set<T>>
 ) {
   return createSet.wrap(createSignal(new Set(value), options));
 }

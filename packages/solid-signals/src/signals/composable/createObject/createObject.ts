@@ -1,5 +1,4 @@
 import { createSignal, Signal } from "solid-js";
-import { SignalOptions } from "solid-js/types/reactive/signal";
 import { signalExtender } from "../../../utils/signal.js";
 
 type AnyObject = Record<any, any>;
@@ -28,7 +27,7 @@ declare namespace createObject {
 
 function createObject<T extends AnyObject>(
   value: T,
-  options?: SignalOptions<T>
+  options?: createSignal.Options<T>
 ) {
   return createObject.wrap(createSignal(value, options));
 }

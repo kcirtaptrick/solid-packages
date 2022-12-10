@@ -1,5 +1,4 @@
 import { createSignal, Signal } from "solid-js";
-import { SignalOptions } from "solid-js/types/reactive/signal";
 import {
   getNativeExtensions,
   NativeMutators,
@@ -36,7 +35,7 @@ declare namespace createArray {
   >;
 }
 
-function createArray<T>(value: T[], options?: SignalOptions<T[]>) {
+function createArray<T>(value: T[], options?: createSignal.Options<T[]>) {
   return createArray.wrap(createSignal(value, options));
 }
 

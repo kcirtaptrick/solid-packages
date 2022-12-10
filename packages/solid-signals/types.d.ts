@@ -2,13 +2,17 @@
 declare global {
   module "solid-js" {
     import { Signal, Accessor, Setter } from "solid-js";
-    import { SignalOptions } from "solid-js/types/reactive/signal";
 
     namespace createSignal {
-      export type Type<T> = (value: T, options?: SignalOptions<T>) => Signal<T>;
+      export type Options<T> = {
+        name?: string;
+        equals?(prev: T, next: T): boolean;
+        internal?: boolean;
+      };
+      export type Type<T> = (value: T, options?: Options<T>) => Signal<T>;
       export type Extended<T, Extensions extends [{}, {}]> = (
         value: T,
-        options?: SignalOptions<T>
+        options?: Options<T>
       ) => [Accessor<T> & Extensions[0], Setter<T> & Extensions[1]];
       export namespace Extended {
         type Result<T, Extensions extends [{}, {}]> = ReturnType<

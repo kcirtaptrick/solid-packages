@@ -1,5 +1,4 @@
-import { createSignal } from "solid-js";
-import { Signal, SignalOptions } from "solid-js/types/reactive/signal";
+import { createSignal, Signal } from "solid-js";
 import {
   getNativeExtensions,
   NativeMutators,
@@ -28,7 +27,7 @@ declare namespace createMap {
 
 function createMap<K = any, V = any>(
   value?: Map<K, V> | [K, V][],
-  options?: SignalOptions<Map<K, V>>
+  options?: createSignal.Options<Map<K, V>>
 ) {
   return createMap.wrap(createSignal(new Map(value), options));
 }

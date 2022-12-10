@@ -1,5 +1,4 @@
 import { createSignal, Signal, Accessor, Setter } from "solid-js";
-import { SignalOptions } from "solid-js/types/reactive/signal";
 import { signalExtender } from "../../../utils/signal.js";
 import createArray from "../createArray/index.js";
 
@@ -44,7 +43,10 @@ declare namespace createHistory {
   > = ReturnType<Type<T, Base>>;
 }
 
-function createHistory<T extends {}>(value: T, options?: SignalOptions<T>) {
+function createHistory<T extends {}>(
+  value: T,
+  options?: createSignal.Options<T>
+) {
   return createHistory.wrap(createSignal(value, options));
 }
 
