@@ -4,6 +4,14 @@
 
 All composable signals will extend the base SolidJS signal API by adding properties to accessors and setters, all fully typed.
 
+- [Solid Signals](#solid-signals)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Basic](#basic)
+    - [Composition](#composition)
+  - [Signals](#signals)
+    - [Creating your own composable signal](#creating-your-own-composable-signal)
+
 ## Installation
 
 ```bash

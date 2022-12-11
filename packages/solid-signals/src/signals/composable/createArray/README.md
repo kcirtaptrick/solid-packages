@@ -2,6 +2,17 @@
 
 Extends signal setter with all mutating array methods and `at` + `find`. See [Reference](#reference) for more details.
 
+- [Composable signal: createArray](#composable-signal-createarray)
+  - [Usage](#usage)
+    - [Basic](#basic)
+      - [Result](#result)
+    - [Composition](#composition)
+      - [Result](#result-1)
+  - [Reference](#reference)
+    - [`setState.at(index: number, value: T): T`](#setstateatindex-number-value-t-t)
+    - [`setState.find(predicate: (item: T) => boolean, value: T): T | undefined`](#setstatefindpredicate-item-t--boolean-value-t-t--undefined)
+    - [Array methods](#array-methods)
+
 ## Usage
 
 ### Basic

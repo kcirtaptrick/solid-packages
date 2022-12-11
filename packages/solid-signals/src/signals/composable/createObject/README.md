@@ -2,6 +2,15 @@
 
 Extends signal setter with `update` method. See [Reference](#reference) for more details.
 
+- [Composable signal: createObject](#composable-signal-createobject)
+  - [Usage](#usage)
+    - [Basic](#basic)
+      - [Result](#result)
+    - [Composition](#composition)
+      - [Result](#result-1)
+  - [Reference](#reference)
+    - [`setState.update(updates: Partial<T>): void`](#setstateupdateupdates-partialt-void)
+
 ## Usage
 
 ### Basic

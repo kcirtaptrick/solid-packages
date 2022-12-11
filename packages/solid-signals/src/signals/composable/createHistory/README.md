@@ -2,6 +2,19 @@
 
 Extends signal getter with `history` and `history.forward`, and setter with `history.back` and `history.forward` methods. See [Reference](#reference) for more details.
 
+- [Composable signal: createHistory](#composable-signal-createhistory)
+  - [Usage](#usage)
+    - [Basic](#basic)
+      - [Result](#result)
+    - [Composition](#composition)
+      - [Result](#result-1)
+  - [Reference](#reference)
+    - [`state.history(): T[]`](#statehistory-t)
+    - [`state.history.forward(): T[]`](#statehistoryforward-t)
+    - [`setState.history.back(): boolean`](#setstatehistoryback-boolean)
+    - [`setState.history.forward(): boolean`](#setstatehistoryforward-boolean)
+    - [`setState.history.clear(): T[]`](#setstatehistoryclear-t)
+
 ## Usage
 
 ### Basic

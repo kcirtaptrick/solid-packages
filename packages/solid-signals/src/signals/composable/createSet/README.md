@@ -2,6 +2,15 @@
 
 Extends signal setter with `set`, `delete` and `clear` methods. See [Reference](#reference) for more details.
 
+- [Composable signal: createSet](#composable-signal-createset)
+  - [Usage](#usage)
+    - [Basic](#basic)
+      - [Result](#result)
+    - [Composition](#composition)
+      - [Result](#result-1)
+  - [Reference](#reference)
+    - [Set methods](#set-methods)
+
 ## Usage
 
 ### Basic
