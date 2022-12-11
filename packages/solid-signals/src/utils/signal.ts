@@ -1,4 +1,4 @@
-import { Signal } from "solid-js";
+import { Signal, untrack } from "solid-js";
 
 export const wireSignal = <Sig extends Signal<{}>>(signal: Sig) =>
   [
@@ -46,9 +46,36 @@ export const signalExtender = <Sig extends Signal<{}>>(signal: Sig) => ({
       extensions(wireSignal(signal) as any).forEach((value, i) => {
         Object.assign(signal[i], value);
       });
+
+    // Must use mutation instead of creating new array to keep reference for wireSignal
+    signal[1] = untrackDeep(signal[1]);
     return signal as unknown as ExtendedSignal;
   },
 });
+
+const untrackDeep = <Target extends {}>(target: Target) => {
+  return new Proxy(target, {
+    apply(target, _this, args) {
+      if (typeof target !== "function")
+        throw new Error(
+          `Target is not callable, called with ${args.join(", ")}`
+        );
+
+      return untrack(() => target(...args));
+    },
+    get(target, p): any {
+      if (!(p in target))
+        throw new Error(
+          `Property ${
+            // Symbol casting
+            String(p)
+          } does not exist in Target`
+        );
+
+      return untrackDeep((target as any)[p]);
+    },
+  });
+};
 
 export type NativeMutators<T, Methods extends keyof T> = {
   [Method in Methods]: T[Method];
