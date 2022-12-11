@@ -1,1 +1,1 @@
-export { default } from "./reactiveCssVars";
+export { default } from "./reactiveCssVars.js";
