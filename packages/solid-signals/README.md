@@ -22,6 +22,8 @@ $ npm install solid-signals
 
 ### Basic
 
+This example uses [`createHistory`](/packages/solid-signals/src/signals/composable/createHistory/README.md), see other signals in the [Signals](#signals) section
+
 ```ts
 const [state, setState] = createHistory(0);
 
