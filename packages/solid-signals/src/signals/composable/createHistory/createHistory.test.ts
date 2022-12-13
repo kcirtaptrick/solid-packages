@@ -225,7 +225,10 @@ test("history setter populates history", () => {
   createRoot((dispose) => {
     const [value, setValue] = createHistory(0);
 
-    setValue.history([0, 1, 2, 3]);
+    {
+      const newHistory = [0, 1, 2, 3];
+      assert.is(setValue.history(newHistory), newHistory);
+    }
 
     assert.equal(value.history(), [0, 1, 2, 3]);
     assert.is(value(), 3);
@@ -233,8 +236,12 @@ test("history setter populates history", () => {
     setValue.history.back();
     setValue.history.back();
     assert.equal(value.history(), [0, 1]);
+    assert.equal(value(), 1);
 
-    setValue.history([4, 5, 6, 7]);
+    {
+      const newHistory = [4, 5, 6, 7];
+      assert.is(setValue.history(newHistory), newHistory);
+    }
     assert.equal(value.history(), [4, 5, 6, 7]);
     assert.is(value(), 7);
 

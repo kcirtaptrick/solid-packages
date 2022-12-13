@@ -78,6 +78,8 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
             setOffset(0);
             setHistory(value);
             setState(value.at(-1) as {});
+
+            return value;
           }) as Setter<T[]>,
           {
             back() {

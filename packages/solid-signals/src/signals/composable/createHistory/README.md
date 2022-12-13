@@ -11,6 +11,7 @@ Extends signal getter with `history` and `history.forward`, and setter with `his
   - [Reference](#reference)
     - [`state.history(): T[]`](#statehistory-t)
     - [`state.history.forward(): T[]`](#statehistoryforward-t)
+    - [`setState.history(value: T | ((prev: T) => T)): T`](#setstatehistoryvalue-t--prev-t--t-t)
     - [`setState.history.back(): boolean`](#setstatehistoryback-boolean)
     - [`setState.history.forward(): boolean`](#setstatehistoryforward-boolean)
     - [`setState.history.clear(): T[]`](#setstatehistoryclear-t)
@@ -126,6 +127,10 @@ Returns backward history as array of states.
 ### `state.history.forward(): T[]`
 
 Returns forward history as array of states.
+
+### `setState.history(value: T | ((prev: T) => T)): T`
+
+Replaces history state, prefer `setState.history.*` functions below.
 
 ### `setState.history.back(): boolean`
 
