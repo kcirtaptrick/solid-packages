@@ -130,7 +130,7 @@ Returns forward history as array of states.
 
 ### `setState.history(value: T | ((prev: T) => T)): T`
 
-Replaces history state, prefer `setState.history.*` functions below.
+Replaces history state, will set state to last history entry. Prefer `setState.history.*` functions below if possible.
 
 ### `setState.history.back(): boolean`
 
