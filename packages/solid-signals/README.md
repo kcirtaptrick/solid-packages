@@ -78,4 +78,4 @@ state.history(); // => [[], [1]]
 
 (This api is not finalized)
 
-You can create your own composable signal by using the signalExtender api, see [createObject](/packages/solid-signals/src/signals/composable/createObject/createObject.ts) for an example
+You can create your own composable signal by using the signalExtender api, see [createObject.ts](/packages/solid-signals/src/signals/composable/createObject/createObject.ts) for an example
