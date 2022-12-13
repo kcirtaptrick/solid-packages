@@ -36,11 +36,11 @@ state(); // => 1
 state.history(); // => [0, 1]
 
 // Setter extension
-setState.back();
+setState.history.back();
 state(); // => 0
 state.history(); // => [0]
 
-setState.forward();
+setState.history.forward();
 state(); // => 1
 state.history(); // => [0, 1]
 ```
