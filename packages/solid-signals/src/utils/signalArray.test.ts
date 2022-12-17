@@ -35,7 +35,9 @@ testn("Basic", () => {
   createRoot((dispose) => {
     const [array, setArray] = signalArray(
       Array.from({ length: 3 }, (_, i) =>
-        Array.from({ length: 3 }, (_, j) => createSignal(i * 3 + j))
+        signalArray(
+          Array.from({ length: 3 }, (_, j) => createSignal(i * 3 + j))
+        )
       )
     );
 
@@ -94,7 +96,9 @@ testn("Extended signals", () => {
   createRoot((dispose) => {
     const [array, setArray] = signalArray(
       Array.from({ length: 3 }, (_, i) =>
-        Array.from({ length: 3 }, (_, j) => createArray([i * 3 + j]))
+        signalArray(
+          Array.from({ length: 3 }, (_, j) => createArray([i * 3 + j]))
+        )
       )
     );
 
@@ -185,8 +189,10 @@ testn("Works with composed signals", () => {
   createRoot((dispose) => {
     const [array, setArray] = signalArray(
       Array.from({ length: 3 }, (_, i) =>
-        Array.from({ length: 3 }, (_, j) =>
-          createHistory.wrap(createArray([i * 3 + j]))
+        signalArray(
+          Array.from({ length: 3 }, (_, j) =>
+            createHistory.wrap(createArray([i * 3 + j]))
+          )
         )
       )
     );
