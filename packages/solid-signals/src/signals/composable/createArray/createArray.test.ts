@@ -57,6 +57,57 @@ test("at: Set single item with index", () => {
   });
 });
 
+test("at (Negative indexing)", () => {
+  createRoot((dispose) => {
+    const [array, setArray] = createArray<number>([0, 1, 2]);
+
+    const res = setArray.at(-1, 10);
+    assert.equal(array(), [0, 1, 10]);
+    // Returns value passed in
+    assert.is(res, 10);
+    dispose();
+  });
+});
+
+test("at (Index larger than length)", () => {
+  createRoot((dispose) => {
+    const [array, setArray] = createArray<number>([0, 1, 2]);
+
+    const res = setArray.at(5, 10);
+    assert.equal(array(), [0, 1, 2, undefined, undefined, 10]);
+    // Returns value passed in
+    assert.is(res, 10);
+
+    dispose();
+  });
+});
+
+test("at (Negative index larger than length)", () => {
+  createRoot((dispose) => {
+    const [array, setArray] = createArray<number>([0, 1, 2]);
+
+    try {
+      setArray.at(-5, 10);
+    } catch (e) {
+      if (!(e instanceof Error)) throw new Error("Should never happen");
+
+      const expectedMessage = `Negative index "-5" points to unassignable index "-2" in array with length ${
+        array().length
+      }.`;
+
+      if (e.message !== expectedMessage)
+        throw new Error(`Messages don't match
+          Expected:
+            ${expectedMessage}
+          Actual:
+            ${e.message}
+        `);
+    }
+
+    dispose();
+  });
+});
+
 test("find: Set single item with predicate", () => {
   createRoot((dispose) => {
     const [array, setArray] = createArray<number>([0, 1, 2]);

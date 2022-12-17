@@ -40,27 +40,27 @@ function createArray<T>(value: T[], options?: createSignal.Options<T[]>) {
 }
 
 createArray.wrap = <Sig extends Signal<any[]>>(signal: Sig) => {
-  type T = Sig extends Signal<infer T>
-    ? T extends any[]
-      ? T[number]
-      : never
-    : never;
+  type T = Sig extends Signal<infer T extends any[]> ? T[number] : never;
 
   return signalExtender(signal).extend<createArray.Extensions<T>>(
     ([state, setState]) => [
       {},
       {
         at(index: number, value: T) {
-          const s = state();
-          setState([
-            ...s.slice(0, index),
-            value,
-            ...s.slice(
-              // If index is -1, array proceeding value should be empty, value
-              // being set will be last item
-              index + 1 || s.length
-            ),
-          ]);
+          const i = index < 0 ? state().length + index : index;
+
+          if (i < 0)
+            throw new Error(
+              `Negative index "${index}" points to unassignable index "${i}" in array with length ${
+                state().length
+              }.`
+            );
+
+          // Making a copy has the most predictable behavior when setting an
+          // index greater than array length
+          const copy = [...state()];
+          copy[i] = value;
+          setState(copy);
 
           return value;
         },

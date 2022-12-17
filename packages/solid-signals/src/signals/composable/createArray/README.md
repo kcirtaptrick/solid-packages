@@ -103,6 +103,16 @@ array: []
 Sets array item at the given index, accepts negative integers, which count back from the last item.
 Returns provided value.
 
+Setting an index larger than the array length will behave similar to native assignment, the value at that index will be set and all values inbetween will be set to `empty`
+
+Setting an index more negative than the length of the array will throw an error
+
+```ts
+const [array, setArray] = createArray<number>([0, 1, 2]);
+
+setArray.at(-4, 1); // throws
+```
+
 ### `setState.find(predicate: (item: T) => boolean, value: T): T | undefined`
 
 Replaces the value of the first element in the array that satisfies the provided testing function. Returns this element or `undefined` if no appropriate element is found.
