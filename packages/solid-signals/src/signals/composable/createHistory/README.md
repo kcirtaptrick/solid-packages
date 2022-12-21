@@ -15,6 +15,8 @@ Extends signal getter with `history` and `history.forward`, and setter with `his
     - [`setState.history.back(): boolean`](#setstatehistoryback-boolean)
     - [`setState.history.forward(): boolean`](#setstatehistoryforward-boolean)
     - [`setState.history.clear(): T[]`](#setstatehistoryclear-t)
+    - [`setState.history.ignore(fn: () => void): void`](#setstatehistoryignorefn---void-void)
+    - [`setState.history.batch(fn: () => void): void`](#setstatehistorybatchfn---void-void)
 
 ## Usage
 
@@ -143,3 +145,11 @@ Sets state to next forward history entry if it exists. Returns whether or not ne
 ### `setState.history.clear(): T[]`
 
 Clears history, does not modify state. History will have 1 entry with the current state after this operation. Returns all existing history including forward history as array of states.
+
+### `setState.history.ignore(fn: () => void): void`
+
+Prevents syncronous state updates in executor (`fn`) from being recorded into `state.history()`.
+
+### `setState.history.batch(fn: () => void): void`
+
+Batches all syncronouse state updates in executor (`fn`) into single update with final state.

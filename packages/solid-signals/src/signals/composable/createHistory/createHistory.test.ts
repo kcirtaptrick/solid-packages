@@ -253,6 +253,72 @@ test("history setter populates history", () => {
   });
 });
 
+test("setState.ignore: doesn't record state updates in executor", () => {
+  createRoot((dispose) => {
+    const [value, setValue] = createHistory(0);
+
+    setValue.history.ignore(() => {
+      setValue(1);
+    });
+
+    assert.is(value(), 1);
+    assert.equal(value.history(), [0]);
+    assert.equal(value.history.forward(), []);
+
+    setValue(2);
+    assert.is(value(), 2);
+    assert.equal(value.history(), [0, 2]);
+
+    // Nested
+    setValue.history.ignore(() => {
+      setValue(3);
+      setValue.history.ignore(() => {
+        setValue(4);
+      });
+      setValue(5);
+    });
+    setValue(6);
+    assert.is(value(), 6);
+    assert.equal(value.history(), [0, 2, 6]);
+
+    dispose();
+  });
+});
+
+test("setState.batch: batches all state updates in executor into single update with final state", () => {
+  createRoot((dispose) => {
+    const [value, setValue] = createHistory(0);
+
+    setValue.history.batch(() => {
+      setValue(1);
+    });
+
+    assert.is(value(), 1);
+    assert.equal(value.history(), [0, 1]);
+    assert.equal(value.history.forward(), []);
+
+    setValue.history.batch(() => {
+      setValue(2);
+      setValue(3);
+    });
+    assert.is(value(), 3);
+    assert.equal(value.history(), [0, 1, 3]);
+
+    // Nested
+    setValue.history.batch(() => {
+      setValue(4);
+      setValue.history.batch(() => {
+        setValue(5);
+      });
+      setValue(6);
+    });
+    assert.is(value(), 6);
+    assert.equal(value.history(), [0, 1, 3, 6]);
+
+    dispose();
+  });
+});
+
 test("Extends other signals (createArray)", () => {
   createRoot((dispose) => {
     const [array, setArray] = createHistory.wrap(createArray<number>([]));
