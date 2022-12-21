@@ -41,7 +41,7 @@ function createArray<T>(value: T[], options?: createSignal.Options<T[]>) {
 }
 
 createArray.wrap = <Sig extends Signal<any[]>>(signal: Sig) => {
-  type T = Sig extends Signal<infer T extends any[]> ? T[number] : never;
+  type T = Sig extends Signal<(infer T)[]> ? T : never;
 
   return signalExtender(signal).extend<createArray.Extensions<T>>(
     ([state, setState]) => [
