@@ -1,7 +1,7 @@
 import { createSignal, Signal } from "solid-js";
 import { SignalOptions } from "solid-js/types/reactive/signal";
-import { NegativeIndexOutOfBoundsError } from "../../../utils/errors";
-import { signalExtender } from "../../../utils/signal";
+import { NegativeIndexOutOfBoundsError } from "../../../utils/errors.js";
+import { signalExtender } from "../../../utils/signal.js";
 
 type AnyTable = Record<any, any>[];
 

@@ -1,2 +1,2 @@
-export { default } from "./createTable";
-export * from "./createTable";
+export { default } from "./createTable.js";
+export * from "./createTable.js";
