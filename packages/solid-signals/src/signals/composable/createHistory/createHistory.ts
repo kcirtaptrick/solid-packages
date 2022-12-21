@@ -29,6 +29,8 @@ declare namespace createHistory {
          * @returns discarded history
          */
         clear(): T[];
+        ignore(fn: () => void): void;
+        batch(fn: () => void): void;
       };
     }
   ];
@@ -56,6 +58,18 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
 
   const [history, setHistory] = createArray([state() as T]);
   const [offset, setOffset] = createSignal(0);
+
+  let noCommitDepth = 0;
+  const commit = () => {
+    if (noCommitDepth > 0) return;
+
+    if (offset() > 0) {
+      setHistory(history().slice(0, -offset()));
+      setOffset(0);
+    }
+
+    setHistory.push(state() as T);
+  };
 
   return signalExtender(signal).extend<createHistory.Extensions<T>>(
     ([, setState]) => [
@@ -107,6 +121,17 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
 
               return res;
             },
+            ignore(fn: () => void) {
+              noCommitDepth++;
+              fn();
+              noCommitDepth--;
+            },
+            batch(fn: () => void) {
+              noCommitDepth++;
+              fn();
+              noCommitDepth--;
+              commit();
+            },
           }
         ),
       },
@@ -118,13 +143,11 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
             ? (setStateAction as Function)(state())
             : setStateAction;
 
-        if (offset() > 0) {
-          setHistory(history().slice(0, -offset()));
-          setOffset(0);
-        }
+        const res = setState(value);
 
-        setHistory.push(value);
-        return setState(value);
+        commit();
+
+        return res;
       }
   );
 };
