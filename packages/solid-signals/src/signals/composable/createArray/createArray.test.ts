@@ -279,26 +279,32 @@ test("Extends other signals (createHistory)", () => {
     setArray.push(1);
     setArray.push(2);
     assert.equal(array(), [0, 1, 2]);
+    assert.equal(array.history(), [[], [0], [0, 1], [0, 1, 2]]);
 
     assert.is(setArray.history.back(), true);
     assert.equal(array(), [0, 1]);
+    assert.equal(array.history(), [[], [0], [0, 1]]);
 
     assert.is(setArray.history.back(), true);
     assert.is(setArray.history.back(), true);
     assert.equal(array(), []);
+    assert.equal(array.history(), [[]]);
 
     assert.is(setArray.history.back(), false);
 
     assert.is(setArray.history.forward(), true);
     assert.equal(array(), [0]);
+    assert.equal(array.history(), [[], [0]]);
 
     assert.is(setArray.history.forward(), true);
     assert.is(setArray.history.forward(), true);
     assert.equal(array(), [0, 1, 2]);
+    assert.equal(array.history(), [[], [0], [0, 1], [0, 1, 2]]);
 
     assert.is(setArray.history.forward(), false);
 
     assert.equal(setArray.history.clear(), [[], [0], [0, 1], [0, 1, 2]]);
+    assert.equal(array.history(), [[0, 1, 2]]);
 
     assert.is(setArray.history.back(), false);
     assert.is(setArray.history.forward(), false);

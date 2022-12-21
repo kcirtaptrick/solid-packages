@@ -1,4 +1,5 @@
 import { createSignal, Signal } from "solid-js";
+import { NegativeIndexOutOfBoundsError } from "../../../utils/errors.js";
 import {
   getNativeExtensions,
   NativeMutators,
@@ -49,12 +50,7 @@ createArray.wrap = <Sig extends Signal<any[]>>(signal: Sig) => {
         at(index: number, value: T) {
           const i = index < 0 ? state().length + index : index;
 
-          if (i < 0)
-            throw new Error(
-              `Negative index "${index}" points to unassignable index "${i}" in array with length ${
-                state().length
-              }.`
-            );
+          if (i < 0) throw NegativeIndexOutOfBoundsError.build(state(), index);
 
           // Making a copy has the most predictable behavior when setting an
           // index greater than array length
