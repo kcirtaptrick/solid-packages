@@ -11,7 +11,7 @@ declare namespace createTable {
       findBy<Match extends Partial<T[number]>>(
         match: Match
       ): (T[number] & Match) | undefined;
-      findAllBy<Match extends Partial<T[number]>>(
+      findManyBy<Match extends Partial<T[number]>>(
         match: Match
       ): (T[number] & Match)[];
       findIndexBy<Match extends Partial<T[number]>>(match: Match): number;
@@ -21,7 +21,7 @@ declare namespace createTable {
         match: Partial<T[number]>,
         value: Value
       ): (T[number] & Value) | undefined;
-      allBy<Value extends T[number]>(
+      manyBy<Value extends T[number]>(
         match: Partial<T[number]>,
         value: Value
       ): void;
@@ -36,7 +36,7 @@ declare namespace createTable {
         match: Match,
         updates: Updates
       ): (T[number] & Match & Updates) | undefined;
-      updateAllBy<
+      updateManyBy<
         Match extends Partial<T[number]>,
         Updates extends Partial<T[number]>
       >(
@@ -97,7 +97,7 @@ createTable.wrap = <Sig extends Signal<AnyTable>>(signal: Sig) => {
           findBy(match) {
             return getBy("find", match);
           },
-          findAllBy(match) {
+          findManyBy(match) {
             return getBy("filter", match);
           },
           findIndexBy(match) {
@@ -109,7 +109,7 @@ createTable.wrap = <Sig extends Signal<AnyTable>>(signal: Sig) => {
             const index = state.findIndexBy(match);
             return setSingleBy(index, value);
           },
-          allBy(match, value) {
+          manyBy(match, value) {
             return setManyBy(match, () => value);
           },
           update(index, updates) {
@@ -129,7 +129,7 @@ createTable.wrap = <Sig extends Signal<AnyTable>>(signal: Sig) => {
             const index = state.findIndexBy(match);
             return setSingleBy(index, { ...state()[index], ...updates });
           },
-          updateAllBy(match, updates) {
+          updateManyBy(match, updates) {
             return setManyBy(match, (item) => ({ ...item, ...updates }));
           },
         },

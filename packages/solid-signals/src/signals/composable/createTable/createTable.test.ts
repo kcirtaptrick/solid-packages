@@ -64,7 +64,7 @@ test("state.findBy: Find item by partial", () => {
   });
 });
 
-test("state.findAllBy: Find all items by partial", () => {
+test("state.findManyBy: Find all items by partial", () => {
   createRoot((dispose) => {
     const [table, setTable] = createTable([
       { a: "a1", b: "b1" },
@@ -72,28 +72,28 @@ test("state.findAllBy: Find all items by partial", () => {
       { a: "a2", b: "b2-1" },
     ]);
 
-    assert.equal(table.findAllBy({ a: "a1" }), [{ a: "a1", b: "b1" }]);
-    assert.equal(table.findAllBy({ a: "a2" }), [
+    assert.equal(table.findManyBy({ a: "a1" }), [{ a: "a1", b: "b1" }]);
+    assert.equal(table.findManyBy({ a: "a2" }), [
       { a: "a2", b: "b2" },
       { a: "a2", b: "b2-1" },
     ]);
-    assert.equal(table.findAllBy({ a: "a2", b: "b2" }), [
+    assert.equal(table.findManyBy({ a: "a2", b: "b2" }), [
       {
         a: "a2",
         b: "b2",
       },
     ]);
-    assert.equal(table.findAllBy({ a: "doesn't exist" }), []);
+    assert.equal(table.findManyBy({ a: "doesn't exist" }), []);
 
     setTable([
       { a: "a3", b: "b3" },
       { a: "a4", b: "b4" },
     ]);
-    assert.equal(table.findAllBy({ a: "a1" }), []);
-    assert.equal(table.findAllBy({ a: "a3" }), [{ a: "a3", b: "b3" }]);
-    assert.equal(table.findAllBy({ a: "a4" }), [{ a: "a4", b: "b4" }]);
-    assert.equal(table.findAllBy({ b: "b3" }), [{ a: "a3", b: "b3" }]);
-    assert.equal(table.findAllBy({ b: "b4" }), [{ a: "a4", b: "b4" }]);
+    assert.equal(table.findManyBy({ a: "a1" }), []);
+    assert.equal(table.findManyBy({ a: "a3" }), [{ a: "a3", b: "b3" }]);
+    assert.equal(table.findManyBy({ a: "a4" }), [{ a: "a4", b: "b4" }]);
+    assert.equal(table.findManyBy({ b: "b3" }), [{ a: "a3", b: "b3" }]);
+    assert.equal(table.findManyBy({ b: "b4" }), [{ a: "a4", b: "b4" }]);
 
     dispose();
   });
@@ -150,7 +150,7 @@ test("setState.by: Finds and sets item by partial", () => {
   });
 });
 
-test("setState.allBy: Finds and sets items by partial", () => {
+test("setState.manyBy: Finds and sets items by partial", () => {
   createRoot((dispose) => {
     const [table, setTable] = createTable([
       { a: "a1", b: "b1" },
@@ -158,7 +158,7 @@ test("setState.allBy: Finds and sets items by partial", () => {
       { a: "a2", b: "b2" },
     ]);
 
-    setTable.allBy({ a: "a1" }, { a: "a3", b: "b3" });
+    setTable.manyBy({ a: "a1" }, { a: "a3", b: "b3" });
     assert.equal(table(), [
       { a: "a3", b: "b3" },
       { a: "a3", b: "b3" },
@@ -211,7 +211,7 @@ test("setState.updateBy: Finds and updates item by partial", () => {
   });
 });
 
-test("setState.updateAllBy: Finds and updates items by partial", () => {
+test("setState.updateManyBy: Finds and updates items by partial", () => {
   createRoot((dispose) => {
     const [table, setTable] = createTable([
       { a: "a1", b: "b1", c: "c1" },
@@ -219,13 +219,13 @@ test("setState.updateAllBy: Finds and updates items by partial", () => {
       { a: "a2", b: "b2", c: "c2" },
     ]);
 
-    setTable.updateAllBy({ a: "a1" }, { b: "b3" });
+    setTable.updateManyBy({ a: "a1" }, { b: "b3" });
     assert.equal(table(), [
       { a: "a1", b: "b3", c: "c1" },
       { a: "a1", b: "b3", c: "c1-1" },
       { a: "a2", b: "b2", c: "c2" },
     ]);
-    setTable.updateAllBy({ a: "a1" }, { b: "b4", c: "c4" });
+    setTable.updateManyBy({ a: "a1" }, { b: "b4", c: "c4" });
     assert.equal(table(), [
       { a: "a1", b: "b4", c: "c4" },
       { a: "a1", b: "b4", c: "c4" },
@@ -249,7 +249,7 @@ test("Extends other signals (createHistory)", () => {
 
     setTable.updateBy({ a: "a1" }, { b: "b3" });
     setTable.updateBy({ a: "a1" }, { a: "a2" });
-    setTable.updateAllBy({ a: "a2" }, { b: "b4" });
+    setTable.updateManyBy({ a: "a2" }, { b: "b4" });
     assert.equal(table(), [
       { a: "a2", b: "b4" },
       { a: "a2", b: "b4" },
