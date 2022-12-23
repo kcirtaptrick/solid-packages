@@ -5,8 +5,7 @@ export default function splitAccessor<T>(accessor: Accessor<T>) {
     get(target: any, prop) {
       if (prop === Symbol.iterator)
         return function* () {
-          for (let i = 0; target().length; i++)
-            yield createMemo(() => target()[i]);
+          for (let i = 0; true; i++) yield createMemo(() => target()[i]);
         };
       return createMemo(() => target()[prop]);
     },
