@@ -25,35 +25,37 @@ export default function createPropsProvider<
     children: JSX.Element;
   };
 
-  function PropsProvider(_props: ProviderProps) {
-    const { children, ...props } = reactiveProps(_props);
+  const PropsProvider = Object.assign(
+    (_props: ProviderProps): JSX.Element => {
+      const { children, ...props } = reactiveProps(_props);
 
-    const context = useContext(Context);
+      const context = useContext(Context);
 
-    return (
-      <Context.Provider
-        value={PropsProvider.merge(context, props)}
-        children={children()}
-      />
-    );
-  }
+      return (
+        <Context.Provider
+          value={PropsProvider.merge(context, props)}
+          children={children()}
+        />
+      );
+    },
+    {
+      merge<P extends ReactiveProps<any>>(
+        context: ReactiveProps<Ctx>,
+        props: P
+      ) {
+        const merged = { ...context, ...props };
 
-  PropsProvider.merge = <P extends ReactiveProps<any>>(
-    context: ReactiveProps<Ctx>,
-    props: P
-  ) => {
-    const merged = { ...context, ...props };
+        for (const [prop, merge] of mergerEntries)
+          if (prop in context && prop in props)
+            merged[prop] = createMemo(() => merge(context, props)) as any;
 
-    for (const [prop, merge] of mergerEntries)
-      if (prop in context && prop in props)
-        merged[prop] = createMemo(() => merge(context, props)) as any;
-
-    return merged;
-  };
-
-  PropsProvider.useContext = () => useContext(Context);
-  PropsProvider.useMerge = <P extends {}>(props: P) =>
-    PropsProvider.merge(PropsProvider.useContext(), props);
+        return merged;
+      },
+      useContext: () => useContext(Context),
+      useMerge: <P extends {}>(props: P) =>
+        PropsProvider.merge(PropsProvider.useContext(), props),
+    }
+  );
 
   createPropsProvider.cache[key] = PropsProvider;
   return PropsProvider;
