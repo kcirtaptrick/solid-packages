@@ -8,7 +8,8 @@
   "scripts": {
     "prepare": "./scripts/configure-references",
     "signals": "pnpm --filter solid-signals",
-    "utils": "pnpm --filter solid-u"
+    "utils": "pnpm --filter solid-u",
+    "overlays": "pnpm --filter solid-overlays"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
