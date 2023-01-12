@@ -61,6 +61,25 @@ test("update: Shallow merges state with updates", () => {
   });
 });
 
+test("delete: Deletes property from object state", () => {
+  createRoot((dispose) => {
+    const [object, setObject] = createObject<{ a: string; b?: string }>({
+      a: "a",
+      b: "b",
+    });
+
+    setObject.delete("b");
+    assert.equal(object(), { a: "a" });
+
+    // "a" is a required property
+    // @ts-expect-error
+    setObject.delete("a");
+    assert.equal(object(), {});
+
+    dispose();
+  });
+});
+
 test("Extends other signals (createHistory)", () => {
   createRoot((dispose) => {
     const [object, setObject] = createObject.wrap(createHistory({ a: "a" }));

@@ -12,6 +12,7 @@ declare namespace createObject {
        * @param updates - New properties to be set
        */
       update(updates: Partial<T> | ((state: T) => Partial<T>)): void;
+      delete(property: keyof T): void;
     }
   ];
   export type Type<
@@ -48,6 +49,9 @@ createObject.wrap = <Sig extends Signal<AnyObject>>(signal: Sig) => {
               : updates),
           }));
           return state();
+        },
+        delete(property) {
+          setState(({ [property]: _, ...remaining }) => remaining);
         },
       },
     ]
