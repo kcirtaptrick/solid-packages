@@ -32,10 +32,9 @@ export default function createPropsProvider<
     const context = useContext(Context);
 
     return (
-      <Context.Provider
-        value={PropsProvider.merge(context, props)}
-        children={children()}
-      />
+      <Context.Provider value={PropsProvider.merge(context, props)}>
+        {children()}
+      </Context.Provider>
     );
   }
 
