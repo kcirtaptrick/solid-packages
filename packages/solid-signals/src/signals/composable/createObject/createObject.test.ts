@@ -63,18 +63,33 @@ test("update: Shallow merges state with updates", () => {
 
 test("delete: Deletes property from object state", () => {
   createRoot((dispose) => {
-    const [object, setObject] = createObject<{ a: string; b?: string }>({
-      a: "a",
-      b: "b",
-    });
+    {
+      const [object, setObject] = createObject<{ a: string; b?: string }>({
+        a: "a",
+        b: "b",
+      });
 
-    setObject.delete("b");
-    assert.equal(object(), { a: "a" });
+      setObject.delete("b");
+      assert.equal(object(), { a: "a" });
 
-    // "a" is a required property
-    // @ts-expect-error
-    setObject.delete("a");
-    assert.equal(object(), {});
+      // "a" is a required property
+      // @ts-expect-error
+      setObject.delete("a");
+      assert.equal(object(), {});
+    }
+    {
+      // String key allows for deletion of any string (or number)
+      const [object, setObject] = createObject<Record<string, string>>({
+        a: "a",
+        b: "b",
+      });
+
+      setObject.delete("b");
+      assert.equal(object(), { a: "a" });
+
+      setObject.delete("a");
+      assert.equal(object(), {});
+    }
 
     dispose();
   });
