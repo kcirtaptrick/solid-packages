@@ -3,6 +3,7 @@ import {
   getNativeExtensions,
   NativeMutators,
   signalExtender,
+  SolidSignal,
 } from "../../../utils/signal.js";
 
 const mapMutators = ["set", "delete", "clear"] as const;
@@ -17,7 +18,7 @@ declare namespace createMap {
   export type Type<
     T extends AnyMap,
     Base extends [{}, {}] = [{}, {}]
-  > = createSignal.Extended<T, Base & Extensions<T>>;
+  > = SolidSignal.Extended<T, Base & Extensions<T>>;
 
   export type Result<
     T extends AnyMap,
@@ -27,7 +28,7 @@ declare namespace createMap {
 
 function createMap<K = any, V = any>(
   value?: Map<K, V> | [K, V][],
-  options?: createSignal.Options<Map<K, V>>
+  options?: SolidSignal.Options<Map<K, V>>
 ) {
   return createMap.wrap(createSignal(new Map(value), options));
 }

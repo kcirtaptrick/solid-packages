@@ -1,5 +1,5 @@
 import { createSignal, Signal, Accessor, Setter } from "solid-js";
-import { signalExtender } from "../../../utils/signal.js";
+import { signalExtender, SolidSignal } from "../../../utils/signal.js";
 import createArray from "../createArray/index.js";
 
 declare namespace createHistory {
@@ -37,7 +37,7 @@ declare namespace createHistory {
   export type Type<
     T extends {},
     Base extends [{}, {}] = [{}, {}]
-  > = createSignal.Extended<T, Base & Extensions<T>>;
+  > = SolidSignal.Extended<T, Base & Extensions<T>>;
 
   export type Result<
     T extends {},
@@ -47,7 +47,7 @@ declare namespace createHistory {
 
 function createHistory<T extends {}>(
   value: T,
-  options?: createSignal.Options<T>
+  options?: SolidSignal.Options<T>
 ) {
   return createHistory.wrap(createSignal(value, options));
 }

@@ -3,6 +3,7 @@ import {
   getNativeExtensions,
   NativeMutators,
   signalExtender,
+  SolidSignal,
 } from "../../../utils/signal.js";
 
 const setMutators = ["add", "delete", "clear"] as const;
@@ -17,7 +18,7 @@ declare namespace createSet {
   export type Type<
     T extends AnySet,
     Base extends [{}, {}] = [{}, {}]
-  > = createSignal.Extended<T, Base & Extensions<T>>;
+  > = SolidSignal.Extended<T, Base & Extensions<T>>;
 
   export type Result<
     T extends AnySet,
@@ -27,7 +28,7 @@ declare namespace createSet {
 
 function createSet<T = any>(
   value?: Set<T> | T[],
-  options?: createSignal.Options<Set<T>>
+  options?: SolidSignal.Options<Set<T>>
 ) {
   return createSet.wrap(createSignal(new Set(value), options));
 }

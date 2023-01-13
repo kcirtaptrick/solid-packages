@@ -1,4 +1,4 @@
-import { Signal, untrack } from "solid-js";
+import { Accessor, Setter, Signal, untrack } from "solid-js";
 
 export const wireSignal = <Sig extends Signal<{}>>(signal: Sig) =>
   [
@@ -100,3 +100,21 @@ export const getNativeExtensions = <T, Methods extends keyof T>(
       },
     ])
   ) as unknown as NativeMutators<T, Methods>;
+
+export declare namespace SolidSignal {
+  export type Options<T> = {
+    name?: string;
+    equals?(prev: T, next: T): boolean;
+    internal?: boolean;
+  };
+  export type Type<T> = (value: T, options?: Options<T>) => Signal<T>;
+  export type Extended<T, Extensions extends [{}, {}]> = (
+    value: T,
+    options?: Options<T>
+  ) => [Accessor<T> & Extensions[0], Setter<T> & Extensions[1]];
+  export namespace Extended {
+    type Result<T, Extensions extends [{}, {}]> = ReturnType<
+      Extended<T, Extensions>
+    >;
+  }
+}

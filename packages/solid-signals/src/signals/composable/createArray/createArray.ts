@@ -4,6 +4,7 @@ import {
   getNativeExtensions,
   NativeMutators,
   signalExtender,
+  SolidSignal,
 } from "../../../utils/signal.js";
 
 const arrayMutators = [
@@ -26,7 +27,7 @@ declare namespace createArray {
       find(predicate: (item: T) => boolean, value: T): T | undefined;
     } & NativeMutators<T[], typeof arrayMutators[number]>
   ];
-  export type Type<T, Base extends [{}, {}] = [{}, {}]> = createSignal.Extended<
+  export type Type<T, Base extends [{}, {}] = [{}, {}]> = SolidSignal.Extended<
     T[],
     Base & Extensions<T>
   >;
@@ -36,7 +37,7 @@ declare namespace createArray {
   >;
 }
 
-function createArray<T>(value: T[], options?: createSignal.Options<T[]>) {
+function createArray<T>(value: T[], options?: SolidSignal.Options<T[]>) {
   return createArray.wrap(createSignal(value, options));
 }
 

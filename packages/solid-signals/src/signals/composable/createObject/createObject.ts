@@ -1,7 +1,11 @@
 import { createSignal, Signal } from "solid-js";
-import { signalExtender } from "../../../utils/signal.js";
+import { signalExtender, SolidSignal } from "../../../utils/signal.js";
 
 type AnyObject = Record<any, any>;
+
+type OptionalKeys<T> = {
+  [Key in keyof T]-?: undefined extends T[Key] ? Key : never;
+}[keyof T];
 
 declare namespace createObject {
   export type Extensions<T> = [
@@ -12,13 +16,17 @@ declare namespace createObject {
        * @param updates - New properties to be set
        */
       update(updates: Partial<T> | ((state: T) => Partial<T>)): void;
-      delete(property: keyof T): void;
+      /**
+       * Deletes property from object state, type only allows optional properties
+       * @param property - Property key to delete
+       */
+      delete(property: OptionalKeys<T>): void;
     }
   ];
   export type Type<
     T extends {},
     Base extends [{}, {}] = [{}, {}]
-  > = createSignal.Extended<T, Base & Extensions<T>>;
+  > = SolidSignal.Extended<T, Base & Extensions<T>>;
 
   export type Result<
     T extends {},
@@ -28,7 +36,7 @@ declare namespace createObject {
 
 function createObject<T extends AnyObject>(
   value: T,
-  options?: createSignal.Options<T>
+  options?: SolidSignal.Options<T>
 ) {
   return createObject.wrap(createSignal(value, options));
 }

@@ -1,7 +1,6 @@
 import { createSignal, Signal } from "solid-js";
-import { SignalOptions } from "solid-js/types/reactive/signal";
 import { NegativeIndexOutOfBoundsError } from "../../../utils/errors.js";
-import { signalExtender } from "../../../utils/signal.js";
+import { signalExtender, SolidSignal } from "../../../utils/signal.js";
 
 type AnyTable = Record<any, any>[];
 
@@ -48,7 +47,7 @@ declare namespace createTable {
   export type Type<
     T extends AnyTable,
     Base extends [{}, {}] = [{}, {}]
-  > = createSignal.Extended<T, Base & Extensions<T>>;
+  > = SolidSignal.Extended<T, Base & Extensions<T>>;
 
   export type Result<
     T extends AnyTable,
@@ -56,7 +55,10 @@ declare namespace createTable {
   > = ReturnType<Type<T, Base>>;
 }
 
-function createTable<T extends AnyTable>(value: T, options?: SignalOptions<T>) {
+function createTable<T extends AnyTable>(
+  value: T,
+  options?: SolidSignal.Options<T>
+) {
   return createTable.wrap(createSignal(value, options));
 }
 
