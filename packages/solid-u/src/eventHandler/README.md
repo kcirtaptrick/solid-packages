@@ -1,4 +1,4 @@
-# handleEvent
+# eventHandler
 
 > Properly handle event in accordance with type `JSX.EventHandlerUnion` this normally requires either repeated inconvenient logic or a type cast.
 
@@ -28,11 +28,11 @@ interface Props extends ComponentProps<"input"> {
     (props.onClick as JSX.EventHandler<HTMLButtonElement, MouseEvent>)?.(e)
 
     // Using this helper, easy typing + type compliant
-    handleChange(props.onClick, e);
+    eventHandler(props.onClick)(e);
   }}
 >
   ...
 </button>
+```
 
 TODO: More docs
-```
