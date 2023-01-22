@@ -10,6 +10,7 @@ Extends signal setter with `update` method. See [Reference](#reference) for more
       - [Result](#result-1)
   - [Reference](#reference)
     - [`setState.update(updates: Partial<T>): void`](#setstateupdateupdates-partialt-void)
+    - [`setState.delete(key: keyof T): void`](#setstatedeletekey-keyof-t-void)
 
 ## Usage
 
@@ -105,3 +106,7 @@ object: { "prop1": "value1", "prop2": "value2" }
 ### `setState.update(updates: Partial<T>): void`
 
 Merges given object with current state. Allows for specific property updates without affecting other properties
+
+### `setState.delete(key: keyof T): void`
+
+Deletes property, similar to `delete object.property`
