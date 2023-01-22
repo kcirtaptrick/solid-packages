@@ -18,6 +18,6 @@
   },
   "peerDependencies": {
     "solid-js": "*",
-    "solid-signals": ">=0.0.11"
+    "solid-signals": ">=1.7.0"
   }
 }
