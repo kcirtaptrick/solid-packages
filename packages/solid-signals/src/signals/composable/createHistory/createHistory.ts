@@ -140,7 +140,7 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
       (setStateAction) => {
         const value =
           typeof setStateAction === "function"
-            ? (setStateAction as Function)(state())
+            ? (setStateAction as any)(state())
             : setStateAction;
 
         const res = setState(value);
