@@ -7,13 +7,11 @@
   ],
   "scripts": {
     "prepare": "./scripts/configure-references",
-    "build": "lerna run build --stream",
-    "lint": "lerna run lint --stream --parallel",
-    "signals": "yarn workspace solid-signals",
-    "utils": "yarn workspace solid-u"
+    "signals": "pnpm --filter solid-signals",
+    "utils": "pnpm --filter solid-u"
   },
   "devDependencies": {
-    "lerna": "^4.0.0",
+    "@changesets/cli": "^2.26.0",
     "prettier": "^2.8.0",
     "tsd": "^0.20.0",
     "tsm": "^2.3.0",
