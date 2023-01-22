@@ -63,6 +63,17 @@ test("Does not overwrite other properties", () => {
   });
 });
 
+test("Deep property creation", () => {
+  createRoot((dispose) => {
+    const [object, setObject] = createDeepObject<any>({});
+
+    setObject.deep.a.b.c(1);
+    assert.equal(object(), { a: { b: { c: 1 } } });
+
+    dispose();
+  });
+});
+
 test("Composition: createHistory", () => {
   createRoot((dispose) => {
     const [object, setObject] = createDeepObject.wrap(
