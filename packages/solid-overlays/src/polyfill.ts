@@ -10,7 +10,7 @@ Array.prototype.findLastIndex = function (predicate) {
     if (predicate(this[i], i, this)) return i;
   return -1;
 };
-Array.prototype.findLastIndex = function (predicate) {
+Array.prototype.findLast = function (predicate: any) {
   const i = this.findLastIndex(predicate);
   if (i === -1) return;
   return this[i];
