@@ -91,7 +91,9 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
 
             setOffset(0);
             setHistory(value);
-            setState(value.at(-1) as {});
+            setState.history.ignore(() => {
+              setState(value.at(-1) as {});
+            });
 
             return value;
           }) as Setter<T[]>,
@@ -100,7 +102,9 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
               if (offset() >= history().length - 1) return false;
 
               setOffset(offset() + 1);
-              setState(history().at(-(offset() + 1)) as {});
+              setState.history.ignore(() => {
+                setState(history().at(-(offset() + 1)) as {});
+              });
 
               return true;
             },
@@ -108,7 +112,9 @@ createHistory.wrap = <Sig extends Signal<{}>>(signal: Sig) => {
               if (offset() < 1) return false;
 
               setOffset(offset() - 1);
-              setState(history().at(-(offset() + 1)) as {});
+              setState.history.ignore(() => {
+                setState(history().at(-(offset() + 1)) as {});
+              });
 
               return true;
             },

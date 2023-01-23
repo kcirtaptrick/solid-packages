@@ -4,9 +4,9 @@ import * as assert from "uvu/assert";
 import createHistory from "../createHistory";
 import createDeepObject from "./createDeepObject";
 
-const test = suite("createObject");
+const test = suite("createDeepObject");
 
-test("Creates object signal", () => {
+test("Creates deep object signal", () => {
   createRoot((dispose) => {
     const [object, setObject] = createDeepObject({ a: "a" });
 

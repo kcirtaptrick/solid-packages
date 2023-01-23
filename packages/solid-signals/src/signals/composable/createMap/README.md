@@ -18,19 +18,23 @@ Extends signal setter with `set`, `delete` and `clear` methods. See [Reference](
 ```tsx
 import { createMap } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [map, setMap] = createMap(new Map<string, string>());
 
   return (
     <div>
-      <button onClick={() => {
-        setMap.set('key1', 'value1');
-      }}>
+      <button
+        onClick={() => {
+          setMap.set("key1", "value1");
+        }}
+      >
         Set key1
       </button>
-      <button onClick={() => {
-        setMap.set('key2', 'value2');
-      }}>
+      <button
+        onClick={() => {
+          setMap.set("key2", "value2");
+        }}
+      >
         Set key2
       </button>
       map: {JSON.stringify(Object.fromEntries(map()))}
@@ -56,24 +60,32 @@ map: { "key1": "value1", "key2": "value2" }
 ```tsx
 import { createHistory, createMap } from "solid-signals";
 
-function ExampleComponent {
-  const [map, setMap] = createMap.wrap(createHistory({ prop1: "value1", prop2: "value2" }));
+function ExampleComponent() {
+  const [map, setMap] = createMap.wrap(
+    createHistory({ prop1: "value1", prop2: "value2" })
+  );
 
   return (
     <div>
-      <button onClick={() => {
-        setMap.set('key1', 'value1');
-      }}>
+      <button
+        onClick={() => {
+          setMap.set("key1", "value1");
+        }}
+      >
         Set key1
       </button>
-      <button onClick={() => {
-        setMap.set('key2', 'value2');
-      }}>
+      <button
+        onClick={() => {
+          setMap.set("key2", "value2");
+        }}
+      >
         Set key2
       </button>
-      <button onClick={() => {
-        setMap.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setMap.history.back();
+        }}
+      >
         Back
       </button>
       map: {JSON.stringify(Object.fromEntries(map()))}

@@ -25,19 +25,23 @@ Extends signal getter with `history` and `history.forward`, and setter with `his
 ```tsx
 import { createHistory } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [number, setNumber] = createHistory(0);
 
   return (
     <div>
-      <button onClick={() => {
-        setNumber(number() + 1);
-      }}>
+      <button
+        onClick={() => {
+          setNumber(number() + 1);
+        }}
+      >
         Increment
       </button>
-      <button onClick={() => {
-        setNumber.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setNumber.history.back();
+        }}
+      >
         Back
       </button>
       number: {JSON.stringify(number())}
@@ -75,19 +79,23 @@ history: [0]
 ```tsx
 import { createArray, createHistory } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [array, setArray] = createHistory.wrap(createArray<number>([]));
 
   return (
     <div>
-      <button onClick={() => {
-        setArray.push(array().length);
-      }}>
+      <button
+        onClick={() => {
+          setArray.push(array().length);
+        }}
+      >
         Push
       </button>
-      <button onClick={() => {
-        setArray.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setArray.history.back();
+        }}
+      >
         Back
       </button>
       array: {JSON.stringify(array())}
