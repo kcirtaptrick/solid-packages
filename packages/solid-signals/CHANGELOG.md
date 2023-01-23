@@ -4,10 +4,15 @@
 
 ### Minor Changes
 
-- createBoundSignal, include base setter in signal extensions
+- createBoundSignal
+- Include base setter in signal extensions
 
 ## 1.7.0
 
 ### Minor Changes
 
-- createDeepObject, createObject doc update
+- createDeepObject
+
+### Patch Changes
+
+- createObject doc update
