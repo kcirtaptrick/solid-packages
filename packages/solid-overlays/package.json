@@ -14,7 +14,12 @@
     "url": "https://github.com/kcirtaptrick/solid-packages/issues"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "prepack": "yarn build",
+    "build": "yarn clean && yarn compile",
+    "compile": "tsc --build && cp \"./package.json\" ./dist/",
+    "test": "uvu -r tsm src .*\\.test\\.ts",
+    "lint": "eslint \"./src/**/*.tsx?\" --max-warnings=0"
   },
   "peerDependencies": {
     "solid-js": "*",
