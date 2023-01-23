@@ -1,0 +1,29 @@
+{
+  "name": "solid-overlays",
+  "version": "0.0.1",
+  "description": "Overlays for SolidJS",
+  "author": "Patrick Wang <patrick.bohan.wang@gmail.com>",
+  "homepage": "https://github.com/kcirtaptrick/solid-packages/tree/master/packages/solid-overlays#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcirtaptrick/solid-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kcirtaptrick/solid-packages/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "peerDependencies": {
+    "solid-js": "*",
+    "solid-signals": ">=1.8.1",
+    "solid-u": ">=0.1.3"
+  },
+  "devDependencies": {
+    "solid-js": "^1.6.8",
+    "solid-signals": "workspace:^1.8.1",
+    "solid-u": "workspace:^0.1.3"
+  }
+}

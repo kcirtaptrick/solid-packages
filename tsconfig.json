@@ -8,6 +8,9 @@
       "path": "packages/solid-form-signal"
     },
     {
+      "path": "packages/solid-overlays"
+    },
+    {
       "path": "packages/solid-signals"
     },
     {
