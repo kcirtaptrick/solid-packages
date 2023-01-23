@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.0.2
+
+### Patch Changes
+
+- Rename entrypoint
+
 ## 0.0.1
 
 ### Patch Changes
