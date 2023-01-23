@@ -18,14 +18,16 @@ Extends signal setter with `set`, `delete` and `clear` methods. See [Reference](
 ```tsx
 import { createSet } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [set, setSet] = createSet(new Set<number>());
 
   return (
     <div>
-      <button onClick={() => {
-        setSet.add(set().size);
-      }}>
+      <button
+        onClick={() => {
+          setSet.add(set().size);
+        }}
+      >
         Add
       </button>
       set: {JSON.stringify([...set()])}
@@ -51,19 +53,25 @@ set: [0, 1]
 ```tsx
 import { createHistory, createSet } from "solid-signals";
 
-function ExampleComponent {
-  const [set, setSet] = createSet.wrap(createHistory({ prop1: "value1", prop2: "value2" }));
+function ExampleComponent() {
+  const [set, setSet] = createSet.wrap(
+    createHistory({ prop1: "value1", prop2: "value2" })
+  );
 
   return (
     <div>
-      <button onClick={() => {
-        setSet.add(set().size);
-      }}>
+      <button
+        onClick={() => {
+          setSet.add(set().size);
+        }}
+      >
         Add
       </button>
-      <button onClick={() => {
-        setSet.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setSet.history.back();
+        }}
+      >
         Back
       </button>
       set: {JSON.stringify([...set()])}

@@ -19,19 +19,26 @@ Extends signal setter with `update` method. See [Reference](#reference) for more
 ```tsx
 import { createObject } from "solid-signals";
 
-function ExampleComponent {
-  const [object, setObject] = createObject({ prop1: "value1", prop2: "value2" });
+function ExampleComponent() {
+  const [object, setObject] = createObject({
+    prop1: "value1",
+    prop2: "value2",
+  });
 
   return (
     <div>
-      <button onClick={() => {
-        setObject.update({ prop1: "updated" });
-      }}>
+      <button
+        onClick={() => {
+          setObject.update({ prop1: "updated" });
+        }}
+      >
         Update prop1
       </button>
-      <button onClick={() => {
-        setObject.update({ prop2: "updated" });
-      }}>
+      <button
+        onClick={() => {
+          setObject.update({ prop2: "updated" });
+        }}
+      >
         Update prop2
       </button>
       object: {JSON.stringify(object())}
@@ -57,24 +64,32 @@ object: { "prop1": "updated", "prop2": "updated" }
 ```tsx
 import { createHistory, createObject } from "solid-signals";
 
-function ExampleComponent {
-  const [object, setObject] = createObject.wrap(createHistory({ prop1: "value1", prop2: "value2" }));
+function ExampleComponent() {
+  const [object, setObject] = createObject.wrap(
+    createHistory({ prop1: "value1", prop2: "value2" })
+  );
 
   return (
     <div>
-      <button onClick={() => {
-        setObject.update({ prop1: "updated" });
-      }}>
+      <button
+        onClick={() => {
+          setObject.update({ prop1: "updated" });
+        }}
+      >
         Update prop1
       </button>
-      <button onClick={() => {
-        setObject.update({ prop2: "updated" });
-      }}>
+      <button
+        onClick={() => {
+          setObject.update({ prop2: "updated" });
+        }}
+      >
         Update prop2
       </button>
-      <button onClick={() => {
-        setObject.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setObject.history.back();
+        }}
+      >
         Back
       </button>
       object: {JSON.stringify(object())}

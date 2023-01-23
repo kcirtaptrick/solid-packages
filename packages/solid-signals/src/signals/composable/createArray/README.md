@@ -20,14 +20,16 @@ Extends signal setter with all mutating array methods and `at` + `find`. See [Re
 ```tsx
 import { createArray } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [array, setArray] = createArray<number>([]);
 
   return (
     <div>
-      <button onClick={() => {
-        setArray.push(array().length);
-      }}>
+      <button
+        onClick={() => {
+          setArray.push(array().length);
+        }}
+      >
         Push
       </button>
       array: {JSON.stringify(array())}
@@ -56,19 +58,23 @@ array: [0, 1, 2]
 ```tsx
 import { createArray, createHistory } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [array, setArray] = createArray.wrap(createHistory<number[]>([]));
 
   return (
     <div>
-      <button onClick={() => {
-        setArray.push(array().length);
-      }}>
+      <button
+        onClick={() => {
+          setArray.push(array().length);
+        }}
+      >
         Push
       </button>
-      <button onClick={() => {
-        setArray.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setArray.history.back();
+        }}
+      >
         Back
       </button>
       array: {JSON.stringify(array())}

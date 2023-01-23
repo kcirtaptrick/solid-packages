@@ -1,8 +1,8 @@
-# Composable signal: createObject
+# Composable signal: createDeepObject
 
-Extends signal setter with `update` method. See [Reference](#reference) for more details.
+Allows for deep property assignment using the `deep` setter namespace. See [Reference](#reference) for more details.
 
-- [Composable signal: createObject](#composable-signal-createobject)
+- [Composable signal: createDeepObject](#composable-signal-createdeepobject)
   - [Usage](#usage)
     - [Basic](#basic)
       - [Result](#result)
@@ -18,24 +18,30 @@ Extends signal setter with `update` method. See [Reference](#reference) for more
 ```tsx
 import { createDeepObject } from "solid-signals";
 
-function ExampleComponent {
+function ExampleComponent() {
   const [object, setObject] = createDeepObject({ outer: { a: 1, b: 1 } });
 
   return (
     <div>
-      <button onClick={() => {
-        setObject.deep.outer.a(2);
-      }}>
+      <button
+        onClick={() => {
+          setObject.deep.outer.a(2);
+        }}
+      >
         Update a
       </button>
-      <button onClick={() => {
-        setObject.deep.outer.b(2);
-      }}>
+      <button
+        onClick={() => {
+          setObject.deep.outer.b(2);
+        }}
+      >
         Update b
       </button>
-      <button onClick={() => {
-        setObject.deep.outer({ a: 3, b: 3 });
-      }}>
+      <button
+        onClick={() => {
+          setObject.deep.outer({ a: 3, b: 3 });
+        }}
+      >
         Update outer
       </button>
       object: {JSON.stringify(object())}
@@ -64,29 +70,39 @@ object: { "outer": { "a": 3, "b": 3 } }
 ```tsx
 import { createDeepObject, createHistory } from "solid-signals";
 
-function ExampleComponent {
-  const [object, setObject] = createDeepObject({ outer: { a: 1, b: 1 } });
+function ExampleComponent() {
+  const [object, setObject] = createDeepObject.wrap(
+    createHistory({ outer: { a: 1, b: 1 } })
+  );
 
   return (
     <div>
-      <button onClick={() => {
-        setObject.deep.outer.a(2);
-      }}>
+      <button
+        onClick={() => {
+          setObject.deep.outer.a(2);
+        }}
+      >
         Update a
       </button>
-      <button onClick={() => {
-        setObject.deep.outer.b(2);
-      }}>
+      <button
+        onClick={() => {
+          setObject.deep.outer.b(2);
+        }}
+      >
         Update b
       </button>
-      <button onClick={() => {
-        setObject.deep.outer({ a: 3, b: 3 });
-      }}>
+      <button
+        onClick={() => {
+          setObject.deep.outer({ a: 3, b: 3 });
+        }}
+      >
         Update outer
       </button>
-      <button onClick={() => {
-        setObject.history.back();
-      }}>
+      <button
+        onClick={() => {
+          setObject.history.back();
+        }}
+      >
         Back
       </button>
       object: {JSON.stringify(object())}
