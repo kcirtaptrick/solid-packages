@@ -71,9 +71,11 @@ state.history(); // => [[], [1]]
 - [createArray](/packages/solid-signals/src/signals/composable/createArray/README.md)
 - [createHistory](/packages/solid-signals/src/signals/composable/createHistory/README.md)
 - [createObject](/packages/solid-signals/src/signals/composable/createObject/README.md)
+- [createDeepObject](/packages/solid-signals/src/signals/composable/createDeepObject/README.md)
 - [createMap](/packages/solid-signals/src/signals/composable/createMap/README.md)
 - [createSet](/packages/solid-signals/src/signals/composable/createSet/README.md)
 - [createTable [PREVIEW]](/packages/solid-signals/src/signals/composable/createTable/README.md)
+- [createBoundSignal](/packages/solid-signals/src/signals/composable/createBoundSignal/README.md)
 
 ### Creating your own composable signal
 
