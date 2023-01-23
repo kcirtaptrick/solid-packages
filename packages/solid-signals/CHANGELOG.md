@@ -1,5 +1,12 @@
 # solid-signals
 
+## 1.8.1
+
+### Patch Changes
+
+- Export createBoundSignal
+- Add createBoundSignal + createDeepObject to docs
+
 ## 1.8.0
 
 ### Minor Changes
