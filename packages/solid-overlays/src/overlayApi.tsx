@@ -211,6 +211,8 @@ const overlayApi = <
             ([, id]) => stateById()[id]?.isPresent
           );
 
+          if (index === -1) return { index: -1, id: -1, key: "" };
+
           const [key, id] = stack()[index];
 
           return { index, id, key };
