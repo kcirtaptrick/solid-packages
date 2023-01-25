@@ -9,8 +9,10 @@ Transforms props from reactive getters to reactive accessor functions.
     - [Optional props](#optional-props)
     - [Prop defaults](#prop-defaults)
     - [`class` prop](#class-prop)
+    - [`children` prop](#children-prop)
     - [Prop spreading](#prop-spreading)
     - [Function props](#function-props)
+    - [reactiveProps.withChildren](#reactivepropswithchildren)
 
 ## Why?
 
@@ -207,6 +209,10 @@ function Component(_props: Props) {
 // <Component class="class1" ... /> => <div class="class1">...</div>
 ```
 
+### `children` prop
+
+Normally when handling children, you'd want to use Solid's `children` utility. This is cumbersome with destructuring `children` from props since they have the same name. To make this easier, this package includes `reactiveProps.withChildren` that wraps the `children` prop internally. See the [`reactiveProps.withChildren`](#reactivepropswithchildren) section for more details.
+
 ### Prop spreading
 
 Since accessing a prop no longer returns the value directly, we need the `spread` helper to spread props.
@@ -268,4 +274,17 @@ function Component(props: Props) {
     </div>
   );
 }
+```
+
+### reactiveProps.withChildren
+
+Replacing `reactiveProps(...)` with `reactiveProps.withChildren(...)` will wrap `props.children` with solids `children` utility. `children` prop must be of type `JSX.Element`.
+
+```ts
+let props: {
+  children?: JSX.Element;
+};
+
+const { children } = reactiveProps.withChildren(props);
+// children is ReturnType<typeof import("solid-js").children>
 ```
