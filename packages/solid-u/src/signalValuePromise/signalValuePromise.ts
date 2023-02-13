@@ -4,7 +4,11 @@ export default function signalValuePromise<T>(
   signal: Accessor<T>,
   predicate: (value: T) => boolean
 ) {
-  return new Promise((resolve) =>
+  return new Promise((resolve) => {
+    const value = signal();
+
+    if (predicate(value)) resolve(value);
+
     createRoot((dispose) =>
       createComputed(() => {
         const value = signal();
@@ -14,6 +18,6 @@ export default function signalValuePromise<T>(
           dispose();
         }
       })
-    )
-  );
+    );
+  });
 }
