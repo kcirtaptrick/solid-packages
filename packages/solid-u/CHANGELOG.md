@@ -1,5 +1,12 @@
 # solid-u
 
+## 0.1.7
+
+### Patch Changes
+
+- b3fd69a: signalValuePromise: Fix types
+- 5b733b2: signalValuePromise: Skip createRoot if already valid
+
 ## 0.1.6
 
 ### Patch Changes
