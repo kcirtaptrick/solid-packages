@@ -2,9 +2,9 @@ import { Accessor, createComputed, createRoot } from "solid-js";
 
 export default function signalValuePromise<T>(
   signal: Accessor<T>,
-  predicate: (value: T) => boolean
+  predicate: (value: T) => unknown
 ) {
-  return new Promise((resolve) => {
+  return new Promise<T>((resolve) => {
     const value = signal();
 
     if (predicate(value)) resolve(value);
