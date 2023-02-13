@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.6
+
+### Patch Changes
+
+- 98f63f6: Export signalValuePromise
+
 ## 0.1.5
 
 ### Patch Changes
