@@ -1,1 +1,1 @@
-export { default as createPropsProvider } from "./createPropsProvider.jsx";
+export { default as createPropsProvider } from "./createPropsProvider";

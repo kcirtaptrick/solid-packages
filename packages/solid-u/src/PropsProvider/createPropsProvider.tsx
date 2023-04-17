@@ -1,5 +1,5 @@
 import { createContext, createMemo, JSX, useContext } from "solid-js";
-import reactiveProps, { ReactiveProps } from "../reactiveProps/index.js";
+import reactiveProps, { ReactiveProps } from "../reactiveProps";
 
 export default function createPropsProvider<
   Props,

@@ -1,2 +1,2 @@
-export * from "./reactiveProps.js";
-export { default } from "./reactiveProps.js";
+export * from "./reactiveProps";
+export { default } from "./reactiveProps";
