@@ -1,6 +1,6 @@
 {
   "name": "solid-u",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "SolidJS Utils",
   "author": "Patrick Wang <patrick.bohan.wang@gmail.com>",
   "homepage": "https://github.com/kcirtaptrick/solid-packages/tree/master/packages/solid-u#readme",
@@ -16,7 +16,7 @@
     "url": "https://github.com/kcirtaptrick/solid-packages/issues"
   },
   "scripts": {
-    "prepack": "yarn build",
+    "prepack": "pnpm build",
     "build": "rollup -c",
     "test": "uvu -r tsm src .*\\.test\\.ts",
     "lint": "eslint \"./src/**/*.tsx?\" --max-warnings=0"

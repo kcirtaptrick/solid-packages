@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.8
+
+### Patch Changes
+
+- e231378: Build with rollup
+
 ## 0.1.7
 
 ### Patch Changes
