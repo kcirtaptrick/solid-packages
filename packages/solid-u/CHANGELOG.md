@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.9
+
+### Patch Changes
+
+- Add types field to exports
+
 ## 0.1.8
 
 ### Patch Changes
