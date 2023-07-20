@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.10
+
+### Patch Changes
+
+- 530265c: Allow destructure defaults in splitAccessor + better iterator
+
 ## 0.1.9
 
 ### Patch Changes
