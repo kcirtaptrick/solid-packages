@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.11
+
+### Patch Changes
+
+- 1a8125f: Added reactiveProps.withPropsFor, memoize splitAccessor target
+
 ## 0.1.10
 
 ### Patch Changes
