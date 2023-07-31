@@ -3,6 +3,8 @@ import { Accessor, createMemo, untrack } from "solid-js";
 export default function splitAccessor<T>(accessor: Accessor<T>) {
   return new Proxy(accessor, {
     get(target: any, prop) {
+      target = createMemo(target);
+
       if (prop === Symbol.iterator)
         return function* () {
           const value = untrack(target);
