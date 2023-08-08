@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.12
+
+### Patch Changes
+
+- 47ceeb5: withPropsFor docs
+
 ## 0.1.11
 
 ### Patch Changes
