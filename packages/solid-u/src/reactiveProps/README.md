@@ -13,6 +13,7 @@ Transforms props from reactive getters to reactive accessor functions.
     - [Prop spreading](#prop-spreading)
     - [Function props](#function-props)
     - [reactiveProps.withChildren](#reactivepropswithchildren)
+    - [reactiveProps.withPropsFor](#reactivepropswithpropsfor)
 
 ## Why?
 
@@ -287,4 +288,17 @@ let props: {
 
 const { children } = reactiveProps.withChildren(props);
 // children is ReturnType<typeof import("solid-js").children>
+```
+
+### reactiveProps.withPropsFor
+
+Replacing `reactiveProps(...)` with `reactiveProps.withPropsFor(...)` will wrap `props.propsFor` with `PropsFor.createHandler`. `propsFor` prop must be of type `PropsFor.Definition`.
+
+```ts
+let props: {
+  propsFor?: JSX.Element;
+};
+
+const { propsFor } = reactiveProps.withPropsFor(props);
+// propsFor is PropsFor.Handler<typeof props["propsFor"]>
 ```
