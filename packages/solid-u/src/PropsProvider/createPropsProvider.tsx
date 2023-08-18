@@ -1,5 +1,6 @@
 import { createContext, createMemo, JSX, useContext } from "solid-js";
 import reactiveProps, { ReactiveProps } from "../reactiveProps";
+import { PropsFor } from "..";
 
 export default function createPropsProvider<
   Props,
@@ -62,6 +63,8 @@ export default function createPropsProvider<
 createPropsProvider.defaultMergers = {
   class: (context: any, props: any) =>
     [context.class?.(), props.class?.()].filter(Boolean).join(" "),
+  propsFor: (context: any, props: any) =>
+    PropsFor.merge(context.propsFor, props.propsFor),
 };
 
 // Maintain references in dev refresh

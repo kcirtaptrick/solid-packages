@@ -50,6 +50,11 @@ export namespace PropsFor {
     for (const propsFor of propsFors) {
       if (!propsFor) continue;
       for (const [target, props] of Object.entries(propsFor)) {
+        // TODO: Add compatibility compile step for ??=
+        // const targetData = propsLists[target] ??= {
+        //   propsList: [],
+        //   requiresContext: false,
+        // }
         if (!propsLists[target])
           propsLists[target as keyof Props] = {
             propsList: [],
