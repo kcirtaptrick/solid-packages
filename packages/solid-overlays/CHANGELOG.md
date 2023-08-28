@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.1.1
+
+### Patch Changes
+
+- 4032f59: Update README
+
 ## 0.1.0
 
 ### Minor Changes
