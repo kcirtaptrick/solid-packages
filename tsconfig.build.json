@@ -1,23 +1,19 @@
 {
   "compilerOptions": {
+    "strict": true,
     "target": "ESNext",
+    "module": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "incremental": true,
     "downlevelIteration": true,
-    "baseUrl": "./",
-    "paths": {
-      "solid-signals/*": ["packages/solid-signals/src/*"]
-    }
+    "baseUrl": "./"
   }
 }

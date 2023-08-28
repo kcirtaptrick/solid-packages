@@ -1,0 +1,21 @@
+.card {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--container);
+  box-sizing: border-box;
+
+  &.raised {
+    box-shadow: 0 0 8px 0 var(--dugout);
+  }
+
+  &:not(.dugout) {
+    box-shadow: 0 0 0 1px var(--outline);
+    &.raised {
+      box-shadow: 0 0 0 1px var(--outline), 0 0 16px 0 var(--dugout);
+    }
+  }
+
+  &.dugout {
+    background: var(--dugout);
+  }
+}

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsxImportSource": "solid-js",
     "jsx": "preserve"
   },
   "files": [],

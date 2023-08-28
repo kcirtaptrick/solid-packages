@@ -11,9 +11,10 @@ import {
   useContext,
   on,
   createComputed,
+  untrack,
 } from "solid-js";
-import createOverlayComponentContext from "./createOverlayComponentContext";
-import createOverlaysContext from "./createOverlaysContext";
+import createOverlayComponentContext from "./contexts/createOverlayComponentContext";
+import createOverlaysContext from "./contexts/createOverlaysContext";
 import {
   ContextType,
   Id,
@@ -30,17 +31,24 @@ import {
   createObject,
   createBoundSignal,
 } from "solid-signals";
-import { reactiveProps, splitAccessor } from "solid-u";
+import OverlayLayoutContext, {
+  useOverlayLayout,
+} from "./contexts/OverlayLayoutContext";
+import OverlayBackdropContext, {
+  useOverlayBackdrop,
+} from "./contexts/OverlayBackdropContext";
+import { reactiveProps, signalValuePromise } from "solid-u";
+import { Tuple } from "record-tuple";
 
 declare namespace overlayApi {
   export interface Options<DefaultLayoutType extends LayoutComponent> {
     DefaultLayout?: DefaultLayoutType;
   }
-  interface OverlayProviderProps<Entry, PushContext> {
+  interface OverlaysProviderProps<Entry, PushContext> {
     data?: Entry[];
     onChange?(
-      data?: OverlayProviderProps<Entry, PushContext>["data"],
-      pushContext?: PushContext
+      data?: OverlaysProviderProps<Entry, PushContext>["data"],
+      pushContext?: PushContext,
     ): void;
     children:
       | JSX.Element
@@ -50,13 +58,13 @@ declare namespace overlayApi {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     export interface Options<
       Overlays extends OverlaysSchema,
-      Context extends { push?: any; render?: any }
+      Context extends { push?: any; render?: any },
     > {
       hooks?: {
         push?<Key extends keyof Overlays>(
           key: Key,
           props: PropsFromLazy<Overlays[Key]>,
-          context?: Context["push"]
+          context?: Context["push"],
         ): void;
       };
       defaultConfig?: OverlayConfig<Context["render"]>;
@@ -66,10 +74,10 @@ declare namespace overlayApi {
 
 const overlayApi = <
   Overlays extends OverlaysSchema,
-  DefaultLayoutType extends LayoutComponent = LayoutComponent
+  DefaultLayoutType extends LayoutComponent = LayoutComponent,
 >(
   overlays: Overlays,
-  { DefaultLayout }: overlayApi.Options<DefaultLayoutType> = {}
+  { DefaultLayout }: overlayApi.Options<DefaultLayoutType> = {},
 ) => {
   const [componentByKey, setComponentByKey] = createObject<
     Partial<Record<keyof Overlays, OverlayComponent | "pending">>
@@ -80,7 +88,7 @@ const overlayApi = <
       Contexts extends { push?: any; render?: any } = {
         push?: unknown;
         render?: unknown;
-      }
+      },
     >({
       hooks = {},
       defaultConfig = {},
@@ -91,10 +99,6 @@ const overlayApi = <
         DefaultLayoutType,
         Contexts["push"]
       >();
-      const OverlayBackdropContext = createContext({
-        show: () => false as boolean,
-        removeCurrent() {},
-      });
 
       const useOverlaysController = () => {
         const { push, removeAll } = useContext(OverlaysContext);
@@ -106,50 +110,21 @@ const overlayApi = <
         return { render, stack };
       };
 
-      const useOverlayBackdrop = () => useContext(OverlayBackdropContext);
-
       const useOverlay = <ComponentType extends OverlayComponent>(
-        Component: ComponentType
+        Component: ComponentType,
       ) => {
-        const {
-          removeSelf,
-          updateOwnProps,
-          pushSelf,
-          withLayoutProps,
-          withBackdropProps,
-        } = useContext(OverlayComponentContext)<ComponentType>(Component);
+        const { removeSelf, updateOwnProps, pushSelf, withLayoutProps } =
+          useContext(OverlayComponentContext)(Component);
+
+        const { withBackdropProps } = useContext(OverlayLayoutContext)(
+          Component.Layout || DefaultLayout!,
+        );
 
         return {
           removeSelf,
           updateOwnProps,
           pushSelf,
           withLayoutProps,
-          withBackdropProps,
-        };
-      };
-
-      const useOverlayLayout = () => {
-        const { current } = useContext(OverlaysContext);
-        const {
-          getRelative,
-          id,
-          index,
-          isCurrent,
-          isPresent,
-          safeToRemove,
-          removeSelf,
-          withBackdropProps,
-        } = useContext(OverlayComponentContext)(null as never);
-
-        return {
-          current,
-          getRelative,
-          id,
-          index,
-          isCurrent,
-          isPresent,
-          safeToRemove,
-          removeSelf,
           withBackdropProps,
         };
       };
@@ -157,9 +132,10 @@ const overlayApi = <
       type Entry = OverlayEntry<Overlays>;
 
       const getComponentConfig = (
-        Component: OverlayComponent
+        Component: OverlayComponent,
       ): Required<OverlayConfig> => ({
         duplicateBehavior: "allow",
+        limit: "none",
         validateRenderContext: () => true,
         ...defaultConfig,
         ...Component.config,
@@ -169,23 +145,23 @@ const overlayApi = <
         (props: { children: JSX.Element }) => <>{props.children}</>,
         {
           Backdrop: (props: { children: JSX.Element }) => <>{props.children}</>,
-        }
+        },
       );
 
       const getLayout = (Component: OverlayComponent): LayoutComponent =>
         Component?.Layout || DefaultLayout || IdentityLayout;
 
-      function OverlayProvider(
-        _props: overlayApi.OverlayProviderProps<Entry, Contexts["push"]>
+      function OverlaysProvider(
+        _props: overlayApi.OverlaysProviderProps<Entry, Contexts["push"]>,
       ) {
         const { data, onChange, children } = reactiveProps(_props);
 
         const [stack, setStack] = createBoundSignal.wrap(
           createArray<Entry>([]),
-          [data, onChange?.()]
+          [data, onChange?.()],
         );
         const entryById = createMemo(() =>
-          Object.fromEntries(stack().map((entry) => [entry[1], entry]))
+          Object.fromEntries(stack().map((entry) => [entry[1], entry])),
         );
 
         interface InternalOverlayState {
@@ -203,17 +179,39 @@ const overlayApi = <
         }
 
         const [stateById, setStateById] = createDeepObject.wrap(
-          createObject<Record<Id, InternalOverlayState>>({})
+          createObject<Record<Id, InternalOverlayState>>({}),
         );
+
+        const reconcileStates = createMemo(() => {
+          if (
+            Tuple(...Object.keys(untrack(stateById))) ===
+            Tuple(...stack().map(([, id]) => `${id}`))
+          )
+            return;
+
+          setStateById((prev) =>
+            Object.fromEntries(
+              stack().map(([, id]) => [
+                id,
+                prev[id] || {
+                  isPresent: true,
+                  onRemove() {},
+                  backdropProps: () => null,
+                  layoutProps: () => null,
+                },
+              ]),
+            ),
+          );
+        });
 
         const current = createMemo(() => {
           const index = stack().findLastIndex(
-            ([, id]) => stateById()[id]?.isPresent
+            ([, id]) => stateById()[id]?.isPresent,
           );
 
           if (index === -1) return { index: -1, id: -1, key: "" };
 
-          const [key, id] = stack()[index];
+          const [key, id] = stack()[index]!;
 
           return { index, id, key };
         });
@@ -222,7 +220,7 @@ const overlayApi = <
           const state = stateById()[id];
           if (!state?.isPresent) return;
 
-          setStateById.deep[id].isPresent(false);
+          setStateById.deep[id]!.isPresent(false);
           state.onRemove(returnValue);
         };
 
@@ -238,9 +236,10 @@ const overlayApi = <
               const map = new Map<Component<any>, Record<string, any>>();
 
               stack().forEach(([key, id], i) => {
-                if (!stateById()[id]) return;
+                const state = stateById()[id];
+                if (!state) return;
 
-                const Component = componentByKey()[key];
+                const Component = createMemo(() => componentByKey()[key])();
                 if (!Component || Component === "pending") return;
 
                 const { validateRenderContext } = getComponentConfig(Component);
@@ -250,7 +249,7 @@ const overlayApi = <
                 if (!Backdrop) return;
 
                 if (!map.has(Backdrop) || i <= current().index) {
-                  map.set(Backdrop, stateById()[id].backdropProps);
+                  map.set(Backdrop, state.backdropProps);
                 }
               });
 
@@ -265,12 +264,13 @@ const overlayApi = <
                 }
                 return true;
               },
-            }
+            },
           );
 
           return (
             <ErrorBoundary
               fallback={(err, reset) => {
+                console.log({ err });
                 on(stack, reset);
                 setStack([]);
                 return <></>;
@@ -283,15 +283,19 @@ const overlayApi = <
                       show: createMemo(
                         () =>
                           current().id !== -1 &&
-                          ((Component = componentByKey()[current().key]) =>
+                          ((
+                            Component = createMemo(
+                              () => componentByKey()[current().key],
+                            )(),
+                          ) =>
                             Component &&
-                            Component !== "pending" &&
-                            getLayout(Component).Backdrop === Backdrop)()
+                            (Component === "pending" ||
+                              getLayout(Component).Backdrop === Backdrop))(),
                       ),
                       removeCurrent() {
                         const [, overlayId] =
                           stack().findLast(
-                            ([, id]) => stateById()[id].isPresent
+                            ([, id]) => stateById()[id]!.isPresent,
                           ) || [];
                         if (overlayId == null) return;
                         remove(overlayId, null);
@@ -302,37 +306,36 @@ const overlayApi = <
                   </OverlayBackdropContext.Provider>
                 )}
               </For>
-              <For each={stack().map(([, id]) => id)}>
+              <For
+                each={
+                  // The body of this For depends on stateById,
+                  // `reconcileStates()` ensures its memo body executes before
+                  // this
+                  (reconcileStates(), stack().map(([, id]) => id))
+                }
+              >
                 {(id, index) => {
-                  const [key, , props] = splitAccessor(() => entryById()[id]);
+                  const key = entryById()[id]![0];
+                  const props = () => entryById()[id]![2];
 
-                  // Initial stack entries do not have state, must initialize
-                  if (!stateById()[id]) {
-                    setStateById.update({
-                      [id]: {
-                        isPresent: true,
-                        onRemove() {},
-                        backdropProps: () => null,
-                        layoutProps: () => null,
-                      },
-                    });
-                  }
-
+                  // Wrap in reactive context to allow guards
                   return (
                     <>
                       {(() => {
                         const Component:
                           | OverlayComponent
                           | "pending"
-                          | undefined = componentByKey()[key()];
+                          | undefined = createMemo(
+                          () => componentByKey()[key],
+                        )();
 
                         if (!Component) {
                           (async () => {
                             setComponentByKey.update({
-                              [key()]: "pending",
+                              [key]: "pending",
                             } as any);
                             setComponentByKey.update({
-                              [key()]: (await overlays[key()]()).default,
+                              [key]: (await overlays[key]!()).default,
                             } as any);
                           })();
                           return null;
@@ -348,7 +351,7 @@ const overlayApi = <
 
                         const Layout = getLayout(Component);
 
-                        const state = () => stateById()[id];
+                        const state = () => stateById()[id]!;
                         const isPresent = createMemo(() => state().isPresent);
 
                         return (
@@ -359,67 +362,100 @@ const overlayApi = <
                               },
                               updateOwnProps(newProps) {
                                 setStack.find(findById(id), [
-                                  key(),
+                                  key,
                                   id,
                                   { ...props(), ...newProps },
                                 ]);
                               },
-                              pushSelf(props, context) {
-                                return overlaysController.push(
-                                  key(),
-                                  props,
-                                  context
-                                );
-                              },
+                              pushSelf: Object.assign(
+                                (newProps: any, context: Contexts["push"]) =>
+                                  overlaysController.push(
+                                    key,
+                                    { ...props(), ...newProps },
+                                    context,
+                                  ),
+                                {
+                                  keyOnly: (
+                                    props: any,
+                                    context: Contexts["push"],
+                                  ) =>
+                                    overlaysController.push(
+                                      key,
+                                      props,
+                                      context,
+                                    ),
+                                },
+                              ) as any,
                               withLayoutProps(props) {
                                 createComputed(() => {
-                                  setStateById.deep[id].layoutProps(props());
+                                  setStateById.deep[id]!.layoutProps(props());
                                 });
                               },
-                              withBackdropProps(props) {
-                                createComputed(() => {
-                                  setStateById.deep[id].backdropProps(props());
-                                });
-                              },
-                              isPresent,
-                              safeToRemove() {
-                                if (isPresent())
-                                  throw new Error(
-                                    '"safeToRemove" called while component is still present'
-                                  );
-
-                                setStack.splice(index(), 1);
-                                setStateById.delete(id);
-                              },
-                              id,
-                              index,
-                              isCurrent: () => current().id === id,
-                              getRelative: (delta) =>
-                                createMemo(() => {
-                                  const i =
-                                    stack().findIndex(findById(id)) + delta;
-                                  const entry = stack()[i];
-
-                                  if (!entry) return null;
-
-                                  const [key, , props] = entry;
-
-                                  return {
-                                    key,
-                                    id,
-                                    props,
-                                    // Prevent stack().findIndex from running on unrelated updates
-                                    ...createMemo(() => stateById()[id])(),
-                                    Component: componentByKey()[
-                                      key
-                                    ] as OverlayComponent,
-                                  };
-                                })(),
                             })}
                           >
-                            <Layout {...state().layoutProps}>
-                              <Component {...props()} />
-                            </Layout>
+                            <OverlayLayoutContext.Provider
+                              value={() => ({
+                                removeSelf() {
+                                  remove(id, null);
+                                },
+                                withBackdropProps(props) {
+                                  createComputed(() => {
+                                    setStateById.deep[id]!.backdropProps(
+                                      props(),
+                                    );
+                                  });
+                                },
+                                isPresent,
+                                safeToRemove() {
+                                  if (isPresent())
+                                    throw new Error(
+                                      '"safeToRemove" called while component is still present',
+                                    );
+
+                                  if (!(id in entryById()))
+                                    throw new Error(
+                                      `Already called "safeToRemove" in ${
+                                        key as any
+                                      }`,
+                                    );
+
+                                  setStack(
+                                    stack().filter(
+                                      ([, entryId]) => entryId !== id,
+                                    ),
+                                  );
+                                },
+                                id,
+                                index,
+                                isCurrent: () => current().id === id,
+                                getRelative: (delta) =>
+                                  createMemo(() => {
+                                    const i =
+                                      stack().findIndex(findById(id)) + delta;
+                                    const entry = stack()[i];
+
+                                    if (!entry) return null;
+
+                                    const [key, , props] = entry;
+
+                                    return {
+                                      key,
+                                      id,
+                                      props,
+                                      // Prevent stack().findIndex from running on unrelated updates
+                                      ...createMemo(() => stateById()[id]!)(),
+                                      Component: componentByKey()[
+                                        key
+                                      ] as OverlayComponent,
+                                    };
+                                  })(),
+                                root: { current },
+                              })}
+                            >
+                              <Layout {...state().layoutProps}>
+                                <Component {...props()} />
+                              </Layout>
+                            </OverlayLayoutContext.Provider>
                           </OverlayComponentContext.Provider>
                         );
                       })()}
@@ -432,34 +468,45 @@ const overlayApi = <
         };
 
         const overlaysController: ContextType<typeof OverlaysContext> = {
-          push(key, props, context) {
+          push(key, props: any = {}, context) {
             hooks.push?.(key, props, context);
 
-            const maxId = Math.max(...stack().map(([, id]) => id));
-            const id = maxId + 1;
+            const componentLoad = signalValuePromise(
+              () => componentByKey()[key],
+              (component) => component && component !== "pending",
+            );
 
-            const entry = [key, id, props] as const;
-
-            let resolveReturnValue: (value: any) => void;
+            let resolveReturnValue: (value: any) => void = null!;
             const returnValue = new Promise((resolve) => {
               resolveReturnValue = resolve;
             });
 
-            setStateById.update({
-              [id]: {
-                isPresent: true,
-                onRemove: resolveReturnValue!,
-                backdropProps: () => null,
-                layoutProps: () => null,
-              },
-            });
+            (async () => {
+              const Component = componentByKey()[key];
+              if (Component) {
+                const { limit } = getComponentConfig(
+                  (Component === "pending"
+                    ? await componentLoad
+                    : Component) as Exclude<typeof Component, "pending">,
+                );
+                if (limit === "once-per-session")
+                  return resolveReturnValue(null);
+              }
+
+              const maxId = Math.max(0, ...stack().map(([, id]) => id));
+              const id = maxId + 1;
+
+              setStack.push([key, id, props]);
+              setStateById.deep[id]!.onRemove(() => resolveReturnValue);
+            })();
 
             return {
               returnValue,
+              componentLoad: componentLoad.then(() => {}),
             };
           },
           removeAll() {
-            for (const id of Object.keys(stateById)) {
+            for (const id of Object.keys(stateById())) {
               remove(id as any as Id, null);
             }
           },
@@ -470,15 +517,19 @@ const overlayApi = <
 
         return (
           <OverlaysContext.Provider value={overlaysController}>
-            {typeof children() === "function"
-              ? (children() as any)({ renderOverlays })
-              : children()}
+            {(() => {
+              const childrenOrRender = children();
+
+              return typeof childrenOrRender === "function"
+                ? (childrenOrRender as any)({ renderOverlays })
+                : childrenOrRender;
+            })()}
           </OverlaysContext.Provider>
         );
       }
 
       return {
-        OverlayProvider,
+        OverlaysProvider,
         useOverlaysController,
         useOverlaysBase,
         useOverlay,
