@@ -20,6 +20,4 @@ pnpm add solid-overlays
 
 Use it:
 
-```tsx
-import temp from 'solid-overlays'
-```
+TODO
