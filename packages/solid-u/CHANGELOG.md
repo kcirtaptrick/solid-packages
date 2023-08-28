@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.13
+
+### Patch Changes
+
+- 069f3c6: PropsProvider: propsFor default merger
+
 ## 0.1.12
 
 ### Patch Changes

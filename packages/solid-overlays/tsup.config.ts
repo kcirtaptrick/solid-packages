@@ -1,5 +1,8 @@
+import path from "path";
 import { defineConfig } from "tsup";
 import * as preset from "tsup-preset-solid";
+import cssModulesPlugin from "esbuild-css-modules-plugin";
+import { sassPlugin } from "esbuild-sass-plugin";
 
 const preset_options: preset.PresetOptions = {
   // array or single object
@@ -11,6 +14,10 @@ const preset_options: preset.PresetOptions = {
       // will generate a separate development entry
       dev_entry: true,
     },
+  ],
+  esbuild_plugins: [
+    sassPlugin(),
+    cssModulesPlugin({ pattern: "[name]_[local]_[hash]" }),
   ],
   // Set to `true` to remove all `console.*` calls and `debugger` statements in prod builds
   drop_console: true,

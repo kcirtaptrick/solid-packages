@@ -1,9 +1,10 @@
 import { createEffect, createMemo, createSignal, JSX, onMount } from "solid-js";
 import { reactiveProps } from "solid-u";
 
-import styles from "./ModalLayout.module.scss";
 import DarkenBackdrop from "../backdrops/DarkenBackdrop";
 import { useOverlayLayout } from "../contexts/OverlayLayoutContext";
+
+import styles from "./ModalLayout.module.scss";
 
 declare namespace ModalLayout {
   interface Props {

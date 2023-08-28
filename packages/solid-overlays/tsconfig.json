@@ -5,8 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "noUncheckedIndexedAccess": true,
     "types": ["vite/client"],
-    "baseUrl": ".",
-    "composite": true
+    "baseUrl": "."
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src/**/*"],
