@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.1.2
+
+### Patch Changes
+
+- 7f363ba: Manually scoped styles
+
 ## 0.1.1
 
 ### Patch Changes
