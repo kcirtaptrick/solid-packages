@@ -15,10 +15,7 @@ const preset_options: preset.PresetOptions = {
       dev_entry: true,
     },
   ],
-  esbuild_plugins: [
-    sassPlugin(),
-    cssModulesPlugin({ pattern: "[name]_[local]_[hash]" }),
-  ],
+  esbuild_plugins: [sassPlugin()],
   // Set to `true` to remove all `console.*` calls and `debugger` statements in prod builds
   drop_console: true,
   // Set to `true` to generate a CommonJS build alongside ESM

@@ -2,7 +2,7 @@ import { reactiveProps } from "solid-u";
 
 import { useOverlayBackdrop } from "../contexts/OverlayBackdropContext";
 
-import styles from "./DarkenBackdrop.module.scss";
+import "./DarkenBackdrop.scss";
 
 declare namespace DarkenBackdrop {
   interface Props {
@@ -17,7 +17,7 @@ function DarkenBackdrop(_props: DarkenBackdrop.Props) {
 
   return (
     <div
-      class={[styles["darken-backdrop"], show() && styles.show]
+      class={["solid-overlays:darken-backdrop", show() && "show"]
         .filter(Boolean)
         .join(" ")}
       onClick={() => {

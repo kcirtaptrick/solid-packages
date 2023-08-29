@@ -4,7 +4,7 @@ import { reactiveProps } from "solid-u";
 import DarkenBackdrop from "../backdrops/DarkenBackdrop";
 import { useOverlayLayout } from "../contexts/OverlayLayoutContext";
 
-import styles from "./ModalLayout.module.scss";
+import "./ModalLayout.scss";
 
 declare namespace ModalLayout {
   interface Props {
@@ -43,10 +43,10 @@ function ModalLayout(_props: ModalLayout.Props) {
   return (
     <div
       class={[
-        styles.modal,
-        left() && styles.left,
-        (right() || enterRight()) && !cleared() && styles.right,
-        layout.isCurrent() && styles.show,
+        "solid-overlays:modal",
+        left() && "left",
+        (right() || enterRight()) && !cleared() && "right",
+        layout.isCurrent() && "show",
       ]
         .filter(Boolean)
         .join(" ")}
