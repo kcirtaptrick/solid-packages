@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.1.3
+
+### Patch Changes
+
+- 243ac41: Export index.css
+
 ## 0.1.2
 
 ### Patch Changes
