@@ -1,5 +1,16 @@
 # solid-signals
 
+## 1.9.0
+
+### Minor Changes
+
+- 7351502: createResettable
+- 9733b07: export createMap and createSet
+
+### Patch Changes
+
+- d1d6240: More accurate type for createDeepObject
+
 ## 1.8.1
 
 ### Patch Changes

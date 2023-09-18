@@ -1,5 +1,0 @@
----
-"solid-signals": minor
----
-
-createResettable
