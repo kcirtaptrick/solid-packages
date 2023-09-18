@@ -1,9 +1,8 @@
 import { createSignal, Setter, Signal } from "solid-js";
 import { signalExtender, SolidSignal } from "../../../utils/signal.js";
 
-type DeepSetter<T> = T extends {}
-  ? { [Key in keyof T]: Setter<T[Key]> & DeepSetter<T[Key]> }
-  : T;
+type DeepSetter<T> = Setter<T> &
+  (T extends {} ? { [Key in keyof T]: DeepSetter<T[Key]> } : T);
 
 declare namespace createDeepObject {
   export type Extensions<T extends {}> = [
