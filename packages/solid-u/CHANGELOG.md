@@ -1,5 +1,11 @@
 # solid-u
 
+## 0.1.14
+
+### Patch Changes
+
+- befec2a: Add EventFrom type
+
 ## 0.1.13
 
 ### Patch Changes
