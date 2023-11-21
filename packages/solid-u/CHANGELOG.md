@@ -1,5 +1,12 @@
 # solid-u
 
+## 0.1.15
+
+### Patch Changes
+
+- 883ac83: Event namespace
+- 883ac83: export EventFrom
+
 ## 0.1.14
 
 ### Patch Changes
