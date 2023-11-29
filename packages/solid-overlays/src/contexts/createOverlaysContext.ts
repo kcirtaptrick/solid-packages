@@ -16,7 +16,7 @@ export type PushArgs<Props, Context> = RequiredKeys<Props> extends never
   : [props: Props, context?: Context];
 
 export type PushResult<Component extends OverlayComponent> = {
-  returnValue: Promise<Component["returnValueSchema"]>;
+  result: Promise<Component["resultSchema"]>;
   componentLoad: Promise<void>;
 };
 

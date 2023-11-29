@@ -20,7 +20,7 @@ export type BackdropComponent = Component<any>;
 export type OverlayComponent = Component<any> & {
   Layout?: LayoutComponent;
   config?: OverlayConfig;
-  returnValueSchema?: any;
+  resultSchema?: any;
 };
 
 export type LazyOverlayImport = () => Promise<{ default: OverlayComponent }>;

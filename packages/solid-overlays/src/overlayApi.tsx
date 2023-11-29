@@ -166,7 +166,7 @@ const overlayApi = <
 
         interface InternalOverlayState {
           isPresent: boolean;
-          onRemove(returnValue: any): void;
+          onRemove(result: any): void;
           layoutProps: ComponentProps<
             Exclude<OverlayComponent["Layout"], undefined>
           >;
@@ -216,12 +216,12 @@ const overlayApi = <
           return { index, id, key };
         });
 
-        const remove = (id: number, returnValue: any) => {
+        const remove = (id: number, result: any) => {
           const state = stateById()[id];
           if (!state?.isPresent) return;
 
           setStateById.deep[id]!.isPresent(false);
-          state.onRemove(returnValue);
+          state.onRemove(result);
         };
 
         const findById =
@@ -357,8 +357,8 @@ const overlayApi = <
                         return (
                           <OverlayComponentContext.Provider
                             value={() => ({
-                              removeSelf(returnValue = null) {
-                                remove(id, returnValue);
+                              removeSelf(result = null) {
+                                remove(id, result);
                               },
                               updateOwnProps(newProps) {
                                 setStack.find(findById(id), [
@@ -476,9 +476,9 @@ const overlayApi = <
               (component) => component && component !== "pending",
             );
 
-            let resolveReturnValue: (value: any) => void = null!;
-            const returnValue = new Promise((resolve) => {
-              resolveReturnValue = resolve;
+            let resolveResult: (value: any) => void = null!;
+            const result = new Promise((resolve) => {
+              resolveResult = resolve;
             });
 
             (async () => {
@@ -489,19 +489,18 @@ const overlayApi = <
                     ? await componentLoad
                     : Component) as Exclude<typeof Component, "pending">,
                 );
-                if (limit === "once-per-session")
-                  return resolveReturnValue(null);
+                if (limit === "once-per-session") return resolveResult(null);
               }
 
               const maxId = Math.max(0, ...stack().map(([, id]) => id));
               const id = maxId + 1;
 
               setStack.push([key, id, props]);
-              setStateById.deep[id]!.onRemove(() => resolveReturnValue);
+              setStateById.deep[id]!.onRemove(() => resolveResult);
             })();
 
             return {
-              returnValue,
+              result,
               componentLoad: componentLoad.then(() => {}),
             };
           },
