@@ -56,7 +56,8 @@
   },
   "dependencies": {
     "record-tuple": "^1.3.2",
-    "solid-u": "workspace:^0.1.13"
+    "solid-signals": "workspace:^",
+    "solid-u": "workspace:^"
   },
   "peerDependencies": {
     "solid-js": "^1.6.0"

@@ -5,8 +5,8 @@
     "allowSyntheticDefaultImports": true,
     "noUncheckedIndexedAccess": true,
     "types": ["vite/client"],
-    "baseUrl": ".",
-    "composite": true
+    "baseUrl": "."
+    // "composite": true, // Causes error TS6307: File '...' is not listed within the file list of project ''. Projects must list all files or use an 'include' pattern.
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src/**/*"],
