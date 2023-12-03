@@ -1,5 +1,11 @@
 # solid-signals
 
+## 1.9.1
+
+### Patch Changes
+
+- 1ba0834: Improve createObject delete type
+
 ## 1.9.0
 
 ### Minor Changes

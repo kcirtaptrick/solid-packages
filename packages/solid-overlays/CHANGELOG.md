@@ -1,5 +1,12 @@
 # solid-overlays
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [1ba0834]
+  - solid-signals@1.9.1
+
 ## 0.2.0
 
 ### Minor Changes
