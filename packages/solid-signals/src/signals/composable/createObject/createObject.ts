@@ -3,13 +3,9 @@ import { signalExtender, SolidSignal } from "../../../utils/signal.js";
 
 type AnyObject = Record<any, any>;
 
-type OptionalKeys<T> = string extends keyof T
-  ? keyof T
-  : number extends keyof T
-  ? number | OptionalKeys<Omit<T, number>>
-  : {
-      [Key in keyof T]-?: undefined extends T[Key] ? Key : never;
-    }[keyof T];
+type OptionalKeys<T> = {
+  [Key in keyof T]-?: Omit<T, Key> extends T ? Key : never;
+}[keyof T];
 
 declare namespace createObject {
   export type Extensions<T> = [
