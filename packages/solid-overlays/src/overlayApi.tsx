@@ -452,7 +452,7 @@ const overlayApi = <
                                 root: { current },
                               })}
                             >
-                              <Layout {...state().layoutProps}>
+                              <Layout {...state()?.layoutProps}>
                                 <Component {...props()} />
                               </Layout>
                             </OverlayLayoutContext.Provider>
