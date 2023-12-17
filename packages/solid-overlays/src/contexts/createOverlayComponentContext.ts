@@ -53,7 +53,6 @@ export default function createOverlayComponentContext<
                 : DefaultLayoutType
             >
           >,
-          dependencies: any[],
         ): void {
           throw new Error(
             "overlays: Attempted to set layout props outside of OverlayComponentContext.Provider",
