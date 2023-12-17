@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.2.4
+
+### Patch Changes
+
+- f42fbae: Fix withLayoutProps crash
+
 ## 0.2.3
 
 ### Patch Changes
