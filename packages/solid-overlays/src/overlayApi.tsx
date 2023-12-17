@@ -388,7 +388,7 @@ const overlayApi = <
                               ) as any,
                               withLayoutProps(props) {
                                 createComputed(() => {
-                                  setStateById.deep[id]!.layoutProps(props());
+                                  setStateById.deep[id]?.layoutProps(props());
                                 });
                               },
                             })}
