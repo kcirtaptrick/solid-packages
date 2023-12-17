@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.2.3
+
+### Patch Changes
+
+- b9c445d: Fix withLayoutProps crash
+
 ## 0.2.2
 
 ### Patch Changes
