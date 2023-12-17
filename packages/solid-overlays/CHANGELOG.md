@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.2.2
+
+### Patch Changes
+
+- 17fc4a3: Fix withLayoutProps type
+
 ## 0.2.1
 
 ### Patch Changes
