@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.3.0
+
+### Minor Changes
+
+- 0c836c5: resultSchema -> defaultResult
+
 ## 0.2.4
 
 ### Patch Changes
