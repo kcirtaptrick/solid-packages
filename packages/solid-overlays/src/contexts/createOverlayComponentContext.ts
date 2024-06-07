@@ -24,7 +24,7 @@ export default function createOverlayComponentContext<
         };
 
       return {
-        removeSelf(result?: ComponentType["resultSchema"]): void {
+        removeSelf(result?: ComponentType["defaultResult"]): void {
           throw new Error(
             "overlays: Attempted to remove self outside of OverlayComponentContext.Provider",
           );

@@ -20,7 +20,7 @@ export type BackdropComponent = Component<any>;
 export type OverlayComponent = Component<any> & {
   Layout?: LayoutComponent;
   config?: OverlayConfig;
-  resultSchema?: any;
+  defaultResult?: any;
 };
 
 export type LazyOverlayImport = () => Promise<{ default: OverlayComponent }>;
@@ -48,3 +48,9 @@ export type OverlayEntry<
 export type ContextType<T extends Context<any>> = T extends Context<infer C>
   ? C
   : never;
+
+export type OverlayResult<Overlay extends Component> = Overlay extends {
+  defaultResult?: infer Result;
+}
+  ? Result
+  : undefined;

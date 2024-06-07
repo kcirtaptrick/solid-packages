@@ -14,14 +14,18 @@ import {
   untrack,
 } from "solid-js";
 import createOverlayComponentContext from "./contexts/createOverlayComponentContext";
-import createOverlaysContext from "./contexts/createOverlaysContext";
+import createOverlaysContext, {
+  PushResult,
+} from "./contexts/createOverlaysContext";
 import {
+  ComponentFromLazy,
   ContextType,
   Id,
   LayoutComponent,
   OverlayComponent,
   OverlayConfig,
   OverlayEntry,
+  OverlayResult,
   OverlaysSchema,
   PropsFromLazy,
 } from "./types";
@@ -65,6 +69,10 @@ declare namespace overlayApi {
           key: Key,
           props: PropsFromLazy<Overlays[Key]>,
           context?: Context["push"],
+        ): void;
+        remove?<Key extends keyof Overlays>(
+          key: Key,
+          result: OverlayResult<ComponentFromLazy<Overlays[Key]>>,
         ): void;
       };
       defaultConfig?: OverlayConfig<Context["render"]>;
@@ -216,7 +224,14 @@ const overlayApi = <
           return { index, id, key };
         });
 
-        const remove = (id: number, result: any) => {
+        const remove = (
+          id: number,
+          result = (
+            componentByKey()[
+              stack().find(([, _id]) => id === _id)![0]
+            ] as OverlayComponent
+          ).defaultResult,
+        ) => {
           const state = stateById()[id];
           if (!state?.isPresent) return;
 
@@ -298,7 +313,7 @@ const overlayApi = <
                             ([, id]) => stateById()[id]!.isPresent,
                           ) || [];
                         if (overlayId == null) return;
-                        remove(overlayId, null);
+                        remove(overlayId);
                       },
                     }}
                   >
@@ -357,7 +372,7 @@ const overlayApi = <
                         return (
                           <OverlayComponentContext.Provider
                             value={() => ({
-                              removeSelf(result = null) {
+                              removeSelf(result) {
                                 remove(id, result);
                               },
                               updateOwnProps(newProps) {
@@ -396,7 +411,7 @@ const overlayApi = <
                             <OverlayLayoutContext.Provider
                               value={() => ({
                                 removeSelf() {
-                                  remove(id, null);
+                                  remove(id);
                                 },
                                 withBackdropProps(props) {
                                   createComputed(() => {
@@ -506,7 +521,7 @@ const overlayApi = <
           },
           removeAll() {
             for (const id of Object.keys(stateById())) {
-              remove(id as any as Id, null);
+              remove(id as any as Id);
             }
           },
           current,
