@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.3.2
+
+### Patch Changes
+
+- 9a69d23: Export layout apis directly
+
 ## 0.3.1
 
 ### Patch Changes
