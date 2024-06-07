@@ -1,6 +1,6 @@
 {
   "name": "solid-overlays",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Overlays for SolidJS",
   "license": "MIT",
   "author": "Patrick Wang <patrick.bohan.wang@gmail.com>",

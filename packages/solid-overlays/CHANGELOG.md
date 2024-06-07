@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.3.1
+
+### Patch Changes
+
+- d1f7efe: Export layout apis directly
+
 ## 0.3.0
 
 ### Minor Changes
