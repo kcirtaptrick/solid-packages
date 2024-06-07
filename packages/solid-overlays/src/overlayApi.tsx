@@ -44,6 +44,8 @@ import OverlayBackdropContext, {
 import { reactiveProps, signalValuePromise } from "solid-u";
 import { Tuple } from "record-tuple";
 
+export { useOverlayLayout, useOverlayBackdrop };
+
 declare namespace overlayApi {
   export interface Options<DefaultLayoutType extends LayoutComponent> {
     DefaultLayout?: DefaultLayoutType;
