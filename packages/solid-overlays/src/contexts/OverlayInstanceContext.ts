@@ -49,6 +49,10 @@ export const useOverlayComponent = () => {
       "Attempted to call useOverlayComponent outside of OverlayInstanceContext.",
     );
 
-  const { removeSelf, index } = context(null as any);
-  return { removeSelf, index };
+  const { removeSelf, pushSelf, index } = context(null as any);
+  return {
+    removeSelf: removeSelf as () => void,
+    pushSelf: pushSelf as () => void,
+    index,
+  };
 };
