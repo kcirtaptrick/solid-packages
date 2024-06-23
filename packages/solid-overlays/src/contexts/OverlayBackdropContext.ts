@@ -1,5 +1,4 @@
-import { ComponentProps, createContext, useContext } from "solid-js";
-import { BackdropComponent } from "../types";
+import { createContext, useContext } from "solid-js";
 
 const OverlayBackdropContext = createContext({
   show: () => false as boolean,

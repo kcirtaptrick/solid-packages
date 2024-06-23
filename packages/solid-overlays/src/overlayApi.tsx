@@ -12,11 +12,11 @@ import {
   on,
   createComputed,
   untrack,
+  Context,
 } from "solid-js";
-import createOverlayComponentContext from "./contexts/createOverlayComponentContext";
-import createOverlaysContext, {
-  PushResult,
-} from "./contexts/createOverlaysContext";
+import OverlayInstanceContext, {
+  useOverlayComponent,
+} from "./contexts/OverlayInstanceContext";
 import {
   ComponentFromLazy,
   ContextType,
@@ -43,8 +43,9 @@ import OverlayBackdropContext, {
 } from "./contexts/OverlayBackdropContext";
 import { reactiveProps, signalValuePromise } from "solid-u";
 import { Tuple } from "record-tuple";
+import OverlaysContext from "./contexts/OverlaysContext";
 
-export { useOverlayLayout, useOverlayBackdrop };
+export { useOverlayLayout, useOverlayBackdrop, useOverlayComponent };
 
 declare namespace overlayApi {
   export interface Options<DefaultLayoutType extends LayoutComponent> {
@@ -93,6 +94,9 @@ const overlayApi = <
     Partial<Record<keyof Overlays, OverlayComponent | "pending">>
   >({});
 
+  const OverlaysContextRef = OverlaysContext;
+  const InstanceContextRef = OverlayInstanceContext;
+
   return {
     create<
       Contexts extends { push?: any; render?: any } = {
@@ -103,28 +107,45 @@ const overlayApi = <
       hooks = {},
       defaultConfig = {},
     }: overlayApi.create.Options<Overlays, Contexts>) {
-      const OverlaysContext = createOverlaysContext<Overlays, Contexts>();
-      const OverlayComponentContext = createOverlayComponentContext<
-        Overlays,
-        DefaultLayoutType,
-        Contexts["push"]
-      >();
-
+      const OverlaysContext = OverlaysContextRef as Context<
+        OverlaysContext<Overlays, Contexts>
+      >;
+      const OverlayInstanceContext = InstanceContextRef as Context<
+        OverlayInstanceContext<Overlays, DefaultLayoutType, Contexts["push"]>
+      >;
       const useOverlaysController = () => {
-        const { push, removeAll } = useContext(OverlaysContext);
+        const context = useContext(OverlaysContext);
+        if (!context)
+          throw new Error(
+            "Attempted to call useOverlaysController outside of OverlaysContext.",
+          );
+
+        const { push, removeAll } = context;
         return { push, removeAll };
       };
 
       const useOverlaysBase = () => {
-        const { render, stack } = useContext(OverlaysContext);
+        const context = useContext(OverlaysContext);
+        if (!context)
+          throw new Error(
+            "Attempted to call useOverlaysBase outside of OverlaysContext.",
+          );
+
+        const { render, stack } = context;
         return { render, stack };
       };
 
       const useOverlay = <ComponentType extends OverlayComponent>(
         Component: ComponentType,
       ) => {
+        const context = useContext(OverlayInstanceContext);
+        if (!context)
+          throw new Error(
+            "Attempted to call useOverlay outside of OverlayInstanceContext.",
+          );
+
         const { removeSelf, updateOwnProps, pushSelf, withLayoutProps } =
-          useContext(OverlayComponentContext)(Component);
+          context(Component);
 
         const { withBackdropProps } = useContext(OverlayLayoutContext)(
           Component.Layout || DefaultLayout!,
@@ -372,8 +393,9 @@ const overlayApi = <
                         const isPresent = createMemo(() => state().isPresent);
 
                         return (
-                          <OverlayComponentContext.Provider
+                          <OverlayInstanceContext.Provider
                             value={() => ({
+                              index,
                               removeSelf(result) {
                                 remove(id, result);
                               },
@@ -473,7 +495,7 @@ const overlayApi = <
                                 <Component {...props()} />
                               </Layout>
                             </OverlayLayoutContext.Provider>
-                          </OverlayComponentContext.Provider>
+                          </OverlayInstanceContext.Provider>
                         );
                       })()}
                     </>
@@ -484,7 +506,10 @@ const overlayApi = <
           );
         };
 
-        const overlaysController: ContextType<typeof OverlaysContext> = {
+        const overlaysController: Exclude<
+          ContextType<typeof OverlaysContext>,
+          undefined
+        > = {
           push(key, props: any = {}, context) {
             hooks.push?.(key, props, context);
 
