@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.1
+
+### Patch Changes
+
+- 11217e0: Improve useOverlayComponent type + add pushSelf
+
 ## 0.4.0
 
 ### Minor Changes
