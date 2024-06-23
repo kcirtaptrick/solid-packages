@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.0
+
+### Minor Changes
+
+- 89c80b0: Add useOverlayComponent + refactor contexts
+
 ## 0.3.2
 
 ### Patch Changes
