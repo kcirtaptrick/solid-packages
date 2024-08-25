@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.2
+
+### Patch Changes
+
+- d0ce248: overlaysBase.removeCurrent
+
 ## 0.4.1
 
 ### Patch Changes
