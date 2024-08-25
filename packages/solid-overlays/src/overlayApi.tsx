@@ -131,8 +131,8 @@ const overlayApi = <
             "Attempted to call useOverlaysBase outside of OverlaysContext.",
           );
 
-        const { render, stack } = context;
-        return { render, stack };
+        const { render, stack, removeCurrent } = context;
+        return { render, stack, removeCurrent };
       };
 
       const useOverlay = <ComponentType extends OverlayComponent>(
@@ -550,6 +550,9 @@ const overlayApi = <
             for (const id of Object.keys(stateById())) {
               remove(id as any as Id);
             }
+          },
+          removeCurrent() {
+            remove(current().id);
           },
           current,
           render: renderOverlays,
