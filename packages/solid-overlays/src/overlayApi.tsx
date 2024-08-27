@@ -47,21 +47,26 @@ import OverlaysContext from "./contexts/OverlaysContext";
 
 export { useOverlayLayout, useOverlayBackdrop, useOverlayComponent };
 
+type RequiredParameter<T> = T extends () => unknown ? never : T;
+
 declare namespace overlayApi {
-  export interface Options<DefaultLayoutType extends LayoutComponent> {
+  interface Options<DefaultLayoutType extends LayoutComponent> {
     DefaultLayout?: DefaultLayoutType;
   }
-  interface OverlaysProviderProps<Entry, PushContext> {
-    data?: Entry[];
-    onChange?(
-      data?: OverlaysProviderProps<Entry, PushContext>["data"],
-      pushContext?: PushContext,
-    ): void;
-    children:
-      | JSX.Element
-      | ((context: { renderOverlays(): JSX.Element }) => JSX.Element);
+  namespace OverlaysProvider {
+    type RenderFunction = (context: {
+      renderOverlays(): JSX.Element;
+    }) => JSX.Element;
+    type Props<Entry, PushContext, TRenderFunction extends RenderFunction> = {
+      data?: Entry[];
+      onChange?(
+        data?: Props<Entry, PushContext, TRenderFunction>["data"],
+        pushContext?: PushContext,
+      ): void;
+      children: JSX.Element | RequiredParameter<TRenderFunction>;
+    };
   }
-  export namespace create {
+  namespace create {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     export interface Options<
       Overlays extends OverlaysSchema,
@@ -182,8 +187,14 @@ const overlayApi = <
       const getLayout = (Component: OverlayComponent): LayoutComponent =>
         Component?.Layout || DefaultLayout || IdentityLayout;
 
-      function OverlaysProvider(
-        _props: overlayApi.OverlaysProviderProps<Entry, Contexts["push"]>,
+      function OverlaysProvider<
+        RenderFunction extends overlayApi.OverlaysProvider.RenderFunction,
+      >(
+        _props: overlayApi.OverlaysProvider.Props<
+          Entry,
+          Contexts["push"],
+          RenderFunction
+        >,
       ) {
         const { data, onChange, children } = reactiveProps(_props);
 
