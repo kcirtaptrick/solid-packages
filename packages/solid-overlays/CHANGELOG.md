@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.4
+
+### Patch Changes
+
+- 95269a4: Require parameter in provider render function
+
 ## 0.4.3
 
 ### Patch Changes
