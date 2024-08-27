@@ -562,11 +562,12 @@ const overlayApi = <
         return (
           <OverlaysContext.Provider value={overlaysController}>
             {(() => {
-              const childrenOrRender = children();
+              const childrenOrFn = children();
 
-              return typeof childrenOrRender === "function"
-                ? (childrenOrRender as any)({ renderOverlays })
-                : childrenOrRender;
+              return typeof childrenOrFn === "function" &&
+                childrenOrFn.length > 0
+                ? (childrenOrFn as any)({ renderOverlays })
+                : childrenOrFn;
             })()}
           </OverlaysContext.Provider>
         );
