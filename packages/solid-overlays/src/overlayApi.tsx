@@ -319,7 +319,7 @@ const overlayApi = <
           return (
             <ErrorBoundary
               fallback={(err, reset) => {
-                console.log({ err });
+                console.error(err);
                 on(stack, reset);
                 setStack([]);
                 return <></>;
