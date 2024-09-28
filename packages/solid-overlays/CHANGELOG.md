@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.5
+
+### Patch Changes
+
+- 08837e6: Improve error logging
+
 ## 0.4.4
 
 ### Patch Changes
