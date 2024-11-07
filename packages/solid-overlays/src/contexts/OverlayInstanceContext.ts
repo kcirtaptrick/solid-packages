@@ -23,6 +23,7 @@ type OverlayInstanceContext<
           >
         ): PushResult<ComponentType>;
       };
+      onRemove(handler: (result: ComponentType["defaultResult"]) => void): void;
 
       withLayoutProps(
         props: () => Partial<

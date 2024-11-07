@@ -209,6 +209,7 @@ const overlayApi = <
         interface InternalOverlayState {
           isPresent: boolean;
           onRemove(result: any): void;
+          removeListeners: ((result: any) => void)[];
           layoutProps: ComponentProps<
             Exclude<OverlayComponent["Layout"], undefined>
           >;
@@ -237,6 +238,7 @@ const overlayApi = <
                 id,
                 prev[id] || {
                   isPresent: true,
+                  removeListeners: [],
                   onRemove() {},
                   backdropProps: () => null,
                   layoutProps: () => null,
@@ -407,6 +409,11 @@ const overlayApi = <
                           <OverlayInstanceContext.Provider
                             value={() => ({
                               index,
+                              onRemove(handler) {
+                                setStateById.deep[id]!.removeListeners(
+                                  (prev) => [...prev, handler],
+                                );
+                              },
                               removeSelf(result) {
                                 remove(id, result);
                               },
@@ -549,7 +556,12 @@ const overlayApi = <
               const id = maxId + 1;
 
               setStack.push([key, id, props]);
-              setStateById.deep[id]!.onRemove(() => resolveResult);
+              setStateById.deep[id]!.onRemove(() => (result) => {
+                for (const listener of stateById()[id]!.removeListeners) {
+                  listener(result);
+                }
+                resolveResult(result);
+              });
             })();
 
             return {
