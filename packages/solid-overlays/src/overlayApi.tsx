@@ -149,14 +149,20 @@ const overlayApi = <
             "Attempted to call useOverlay outside of OverlayInstanceContext.",
           );
 
-        const { removeSelf, updateOwnProps, pushSelf, withLayoutProps } =
-          context(Component);
+        const {
+          removeSelf,
+          updateOwnProps,
+          pushSelf,
+          withLayoutProps,
+          onRemove,
+        } = context(Component);
 
         const { withBackdropProps } = useContext(OverlayLayoutContext)(
           Component.Layout || DefaultLayout!,
         );
 
         return {
+          onRemove,
           removeSelf,
           updateOwnProps,
           pushSelf,
