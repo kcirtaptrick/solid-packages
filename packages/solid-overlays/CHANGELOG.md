@@ -1,5 +1,12 @@
 # solid-overlays
 
+## 0.4.6
+
+### Patch Changes
+
+- c4a079f: Expose onRemove
+- 9fa759f: Add overlay.onRemove
+
 ## 0.4.5
 
 ### Patch Changes
