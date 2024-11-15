@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.7
+
+### Patch Changes
+
+- 7f2bf7c: Fix onRemove push crash
+
 ## 0.4.6
 
 ### Patch Changes
