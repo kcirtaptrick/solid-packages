@@ -416,9 +416,10 @@ const overlayApi = <
                             value={() => ({
                               index,
                               onRemove(handler) {
-                                setStateById.deep[id]!.removeListeners(
-                                  (prev) => [...prev, handler],
-                                );
+                                setStateById.deep[id]!.removeListeners([
+                                  ...(stateById()[id]?.removeListeners || []),
+                                  handler,
+                                ]);
                               },
                               removeSelf(result) {
                                 remove(id, result);
