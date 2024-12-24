@@ -266,19 +266,19 @@ const overlayApi = <
           return { index, id, key };
         });
 
-        const remove = (
-          id: number,
-          result = (
-            componentByKey()[
-              stack().find(([, _id]) => id === _id)![0]
-            ] as OverlayComponent
-          ).defaultResult,
-        ) => {
+        const remove = (id: number, result?: any) => {
           const state = stateById()[id];
           if (!state?.isPresent) return;
 
           setStateById.deep[id]!.isPresent(false);
-          state.onRemove(result);
+          state.onRemove(
+            result ??
+              (
+                componentByKey()[
+                  stack().find(([, _id]) => id === _id)![0]
+                ] as OverlayComponent
+              ).defaultResult,
+          );
         };
 
         const findById =
