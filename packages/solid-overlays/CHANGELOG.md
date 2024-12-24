@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.8
+
+### Patch Changes
+
+- f7a3e6b: Fix double remove error
+
 ## 0.4.7
 
 ### Patch Changes
