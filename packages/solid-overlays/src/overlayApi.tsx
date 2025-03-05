@@ -158,7 +158,14 @@ const overlayApi = <
         } = context(Component);
 
         const { withBackdropProps } = useContext(OverlayLayoutContext)(
-          Component.Layout || DefaultLayout!,
+          (Component.Layout || DefaultLayout!) as Exclude<
+            ComponentType["Layout"],
+            undefined
+          > extends infer T
+            ? T extends never
+              ? DefaultLayoutType
+              : Extract<T, LayoutComponent>
+            : never,
         );
 
         return {
