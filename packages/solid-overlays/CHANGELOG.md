@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.9
+
+### Patch Changes
+
+- 202fec4: Fix withBackdropProps type
+
 ## 0.4.8
 
 ### Patch Changes
