@@ -3,7 +3,6 @@ import "./polyfill";
 import {
   Component,
   ComponentProps,
-  createContext,
   createMemo,
   ErrorBoundary,
   For,
@@ -18,6 +17,7 @@ import OverlayInstanceContext, {
   useOverlayComponent,
 } from "./contexts/OverlayInstanceContext";
 import {
+  BackdropComponent,
   ComponentFromLazy,
   ContextType,
   Id,
@@ -46,6 +46,12 @@ import { Tuple } from "record-tuple";
 import OverlaysContext from "./contexts/OverlaysContext";
 
 export { useOverlayLayout, useOverlayBackdrop, useOverlayComponent };
+export type {
+  OverlayComponent,
+  OverlayConfig,
+  LayoutComponent,
+  BackdropComponent,
+};
 
 type RequiredParameter<T> = T extends () => unknown ? never : T;
 
