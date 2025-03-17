@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.10
+
+### Patch Changes
+
+- 3906bc2: Export types
+
 ## 0.4.9
 
 ### Patch Changes
