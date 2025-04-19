@@ -617,6 +617,7 @@ const overlayApi = <
       }
 
       return {
+        OverlaysContext,
         OverlaysProvider,
         useOverlaysController,
         useOverlaysBase,
