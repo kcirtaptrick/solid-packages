@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.11
+
+### Patch Changes
+
+- 90d4b4f: Export OverlaysContext
+
 ## 0.4.10
 
 ### Patch Changes
