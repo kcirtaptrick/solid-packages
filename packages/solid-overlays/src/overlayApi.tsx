@@ -170,6 +170,8 @@ const overlayApi = <
           > extends infer T
             ? T extends never
               ? DefaultLayoutType
+              : unknown extends T
+              ? DefaultLayoutType
               : Extract<T, LayoutComponent>
             : never,
         );
