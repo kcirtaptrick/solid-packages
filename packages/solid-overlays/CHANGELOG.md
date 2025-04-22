@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.4.12
+
+### Patch Changes
+
+- c910795: withBackdropProps type: Support unknown layout
+
 ## 0.4.11
 
 ### Patch Changes
