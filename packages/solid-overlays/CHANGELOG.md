@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.5.1
+
+### Patch Changes
+
+- 1f287eb: Finish push -> open rename
+
 ## 0.5.0
 
 ### Minor Changes

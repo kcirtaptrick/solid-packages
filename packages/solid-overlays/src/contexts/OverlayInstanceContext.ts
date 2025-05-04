@@ -5,7 +5,7 @@ import { LayoutComponent, OverlayComponent, OverlaysSchema } from "../types";
 type OverlayInstanceContext<
   Overlays extends OverlaysSchema,
   DefaultLayoutType extends LayoutComponent,
-  PushContext,
+  OpenContext,
 > =
   | (<ComponentType extends OverlayComponent>(
       Component: ComponentType,
@@ -14,12 +14,12 @@ type OverlayInstanceContext<
       updateOwnProps(props: Partial<ComponentProps<ComponentType>>): void;
       openSelf: ((
         props?: ComponentProps<ComponentType>,
-        context?: PushContext,
+        context?: OpenContext,
       ) => OpenResult<ComponentType>) & {
         keyOnly(
           ...[props, context]: OpenArgs<
             ComponentProps<ComponentType>,
-            PushContext
+            OpenContext
           >
         ): OpenResult<ComponentType>;
       };
