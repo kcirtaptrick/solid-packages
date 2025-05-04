@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.5.0
+
+### Minor Changes
+
+- 52e940c: Rename push, remove -> open, close
+
 ## 0.4.12
 
 ### Patch Changes
