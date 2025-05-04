@@ -79,12 +79,12 @@ declare namespace overlayApi {
       Context extends { push?: any; render?: any },
     > {
       hooks?: {
-        push?<Key extends keyof Overlays>(
+        open?<Key extends keyof Overlays>(
           key: Key,
           props: PropsFromLazy<Overlays[Key]>,
           context?: Context["push"],
         ): void;
-        remove?<Key extends keyof Overlays>(
+        close?<Key extends keyof Overlays>(
           key: Key,
           result: OverlayResult<ComponentFromLazy<Overlays[Key]>>,
         ): void;
@@ -131,8 +131,8 @@ const overlayApi = <
             "Attempted to call useOverlaysController outside of OverlaysContext.",
           );
 
-        const { push, removeAll } = context;
-        return { push, removeAll };
+        const { push, closeAll } = context;
+        return { push, closeAll };
       };
 
       const useOverlaysBase = () => {
@@ -142,8 +142,8 @@ const overlayApi = <
             "Attempted to call useOverlaysBase outside of OverlaysContext.",
           );
 
-        const { render, stack, removeCurrent } = context;
-        return { render, stack, removeCurrent };
+        const { render, stack, closeCurrent } = context;
+        return { render, stack, closeCurrent };
       };
 
       const useOverlay = <ComponentType extends OverlayComponent>(
@@ -155,13 +155,8 @@ const overlayApi = <
             "Attempted to call useOverlay outside of OverlayInstanceContext.",
           );
 
-        const {
-          removeSelf,
-          updateOwnProps,
-          pushSelf,
-          withLayoutProps,
-          onRemove,
-        } = context(Component);
+        const { close, updateOwnProps, pushSelf, withLayoutProps, onClose } =
+          context(Component);
 
         const { withBackdropProps } = useContext(OverlayLayoutContext)(
           (Component.Layout || DefaultLayout!) as Exclude<
@@ -177,8 +172,8 @@ const overlayApi = <
         );
 
         return {
-          onRemove,
-          removeSelf,
+          onClose,
+          close,
           updateOwnProps,
           pushSelf,
           withLayoutProps,
@@ -229,8 +224,8 @@ const overlayApi = <
 
         interface InternalOverlayState {
           isPresent: boolean;
-          onRemove(result: any): void;
-          removeListeners: ((result: any) => void)[];
+          onClose(result: any): void;
+          closeListeners: ((result: any) => void)[];
           layoutProps: ComponentProps<
             Exclude<OverlayComponent["Layout"], undefined>
           >;
@@ -259,8 +254,8 @@ const overlayApi = <
                 id,
                 prev[id] || {
                   isPresent: true,
-                  removeListeners: [],
-                  onRemove() {},
+                  closeListeners: [],
+                  onClose() {},
                   backdropProps: () => null,
                   layoutProps: () => null,
                 },
@@ -286,7 +281,7 @@ const overlayApi = <
           if (!state?.isPresent) return;
 
           setStateById.deep[id]!.isPresent(false);
-          state.onRemove(
+          state.onClose(
             result ??
               (
                 componentByKey()[
@@ -364,7 +359,7 @@ const overlayApi = <
                             (Component === "pending" ||
                               getLayout(Component).Backdrop === Backdrop))(),
                       ),
-                      removeCurrent() {
+                      closeCurrent() {
                         const [, overlayId] =
                           stack().findLast(
                             ([, id]) => stateById()[id]!.isPresent,
@@ -430,13 +425,13 @@ const overlayApi = <
                           <OverlayInstanceContext.Provider
                             value={() => ({
                               index,
-                              onRemove(handler) {
-                                setStateById.deep[id]!.removeListeners([
-                                  ...(stateById()[id]?.removeListeners || []),
+                              onClose(handler) {
+                                setStateById.deep[id]!.closeListeners([
+                                  ...(stateById()[id]?.closeListeners || []),
                                   handler,
                                 ]);
                               },
-                              removeSelf(result) {
+                              close(result) {
                                 remove(id, result);
                               },
                               updateOwnProps(newProps) {
@@ -474,7 +469,7 @@ const overlayApi = <
                           >
                             <OverlayLayoutContext.Provider
                               value={() => ({
-                                removeSelf() {
+                                close() {
                                   remove(id);
                                 },
                                 withBackdropProps(props) {
@@ -551,7 +546,7 @@ const overlayApi = <
           undefined
         > = {
           push(key, props: any = {}, context) {
-            hooks.push?.(key, props, context);
+            hooks.open?.(key, props, context);
 
             const componentLoad = signalValuePromise(
               () => componentByKey()[key],
@@ -578,8 +573,8 @@ const overlayApi = <
               const id = maxId + 1;
 
               setStack.push([key, id, props]);
-              setStateById.deep[id]!.onRemove(() => (result) => {
-                for (const listener of stateById()[id]!.removeListeners) {
+              setStateById.deep[id]!.onClose(() => (result) => {
+                for (const listener of stateById()[id]!.closeListeners) {
                   listener(result);
                 }
                 resolveResult(result);
@@ -591,12 +586,12 @@ const overlayApi = <
               componentLoad: componentLoad.then(() => {}),
             };
           },
-          removeAll() {
+          closeAll() {
             for (const id of Object.keys(stateById())) {
               remove(id as any as Id);
             }
           },
-          removeCurrent() {
+          closeCurrent() {
             remove(current().id);
           },
           current,

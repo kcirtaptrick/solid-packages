@@ -13,7 +13,7 @@ declare namespace DarkenBackdrop {
 function DarkenBackdrop(_props: DarkenBackdrop.Props) {
   const { noClose } = reactiveProps(_props);
 
-  const { show, removeCurrent } = useOverlayBackdrop();
+  const { show, closeCurrent } = useOverlayBackdrop();
 
   return (
     <div
@@ -22,7 +22,7 @@ function DarkenBackdrop(_props: DarkenBackdrop.Props) {
         .join(" ")}
       onClick={() => {
         if (noClose?.() || !show()) return;
-        removeCurrent();
+        closeCurrent();
       }}
     />
   );

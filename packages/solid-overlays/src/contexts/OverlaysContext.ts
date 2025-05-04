@@ -32,8 +32,8 @@ type OverlaysContext<
           Contexts["push"]
         >
       ): PushResult<ComponentFromLazy<Overlays[Key]>>;
-      removeAll(): void;
-      removeCurrent(): void;
+      closeAll(): void;
+      closeCurrent(): void;
       stack(): OverlayEntry<Overlays>[];
       current(): { id: number; index: number };
       render(context?: Contexts["render"]): JSX.Element;

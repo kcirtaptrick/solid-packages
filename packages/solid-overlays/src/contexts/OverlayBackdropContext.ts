@@ -2,9 +2,9 @@ import { createContext, useContext } from "solid-js";
 
 const OverlayBackdropContext = createContext({
   show: () => false as boolean,
-  removeCurrent(): void {
+  closeCurrent(): void {
     throw new Error(
-      'overlays: "removeCurrent" called outside of OverlayBackdropContext.Provider',
+      'overlays: "closeCurrent" called outside of OverlayBackdropContext.Provider',
     );
   },
 });

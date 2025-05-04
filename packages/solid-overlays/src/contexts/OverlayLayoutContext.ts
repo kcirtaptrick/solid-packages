@@ -4,7 +4,7 @@ import { LayoutComponent } from "../types";
 const OverlayLayoutContext = createContext(
   <LayoutType extends LayoutComponent>(Component: LayoutType) => {
     return {
-      removeSelf(): void {
+      close(): void {
         throw new Error(
           "overlays: Attempted to remove self outside of OverlayLayoutContext.Provider",
         );

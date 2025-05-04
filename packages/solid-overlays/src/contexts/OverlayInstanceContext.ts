@@ -10,7 +10,7 @@ type OverlayInstanceContext<
   | (<ComponentType extends OverlayComponent>(
       Component: ComponentType,
     ) => {
-      removeSelf(result?: ComponentType["defaultResult"]): void;
+      close(result?: ComponentType["defaultResult"]): void;
       updateOwnProps(props: Partial<ComponentProps<ComponentType>>): void;
       pushSelf: ((
         props?: ComponentProps<ComponentType>,
@@ -23,7 +23,7 @@ type OverlayInstanceContext<
           >
         ): PushResult<ComponentType>;
       };
-      onRemove(handler: (result: ComponentType["defaultResult"]) => void): void;
+      onClose(handler: (result: ComponentType["defaultResult"]) => void): void;
 
       withLayoutProps(
         props: () => Partial<
@@ -50,9 +50,9 @@ export const useOverlayComponent = () => {
       "Attempted to call useOverlayComponent outside of OverlayInstanceContext.",
     );
 
-  const { removeSelf, pushSelf, index } = context(null as any);
+  const { close, pushSelf, index } = context(null as any);
   return {
-    removeSelf: removeSelf as () => void,
+    close: close as () => void,
     pushSelf: pushSelf as () => void,
     index,
   };
