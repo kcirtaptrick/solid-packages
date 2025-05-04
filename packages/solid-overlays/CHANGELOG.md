@@ -77,7 +77,7 @@
 
 ### Patch Changes
 
-- 11217e0: Improve useOverlayComponent type + add pushSelf
+- 11217e0: Improve useOverlayComponent type + add openSelf
 
 ## 0.4.0
 

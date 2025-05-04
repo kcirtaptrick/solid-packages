@@ -1,12 +1,12 @@
 import { useOverlay } from ".";
 import Card from "../components/Card";
 
-type WithPushSelfProps = {
+type WithOpenSelfProps = {
   depth?: number;
 };
 
-export default function WithPushSelf(props: WithPushSelfProps) {
-  const overlay = useOverlay(WithPushSelf);
+export default function WithOpenSelf(props: WithOpenSelfProps) {
+  const overlay = useOverlay(WithOpenSelf);
 
   return (
     <Card>
@@ -14,10 +14,10 @@ export default function WithPushSelf(props: WithPushSelfProps) {
       <br />
       <button
         onClick={() => {
-          overlay.pushSelf({ depth: (props.depth || 0) + 1 });
+          overlay.openSelf({ depth: (props.depth || 0) + 1 });
         }}
       >
-        Push self
+        Open self
       </button>
     </Card>
   );

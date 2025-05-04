@@ -11,27 +11,27 @@ type RequiredKeys<T> = {
   [Key in keyof T]-?: {} extends Pick<T, Key> ? never : Key;
 }[keyof T];
 
-export type PushArgs<Props, Context> = RequiredKeys<Props> extends never
+export type OpenArgs<Props, Context> = RequiredKeys<Props> extends never
   ? [props?: Props, context?: Context]
   : [props: Props, context?: Context];
 
-export type PushResult<Component extends OverlayComponent> = {
+export type OpenResult<Component extends OverlayComponent> = {
   result: Promise<Component["defaultResult"]>;
   componentLoad: Promise<void>;
 };
 
 type OverlaysContext<
   Overlays extends OverlaysSchema,
-  Contexts extends { push?: any; render?: any },
+  Contexts extends { open?: any; render?: any },
 > =
   | {
-      push<Key extends keyof Overlays>(
+      open<Key extends keyof Overlays>(
         key: Key,
-        ...[props, context]: PushArgs<
+        ...[props, context]: OpenArgs<
           PropsFromLazy<Overlays[Key]>,
-          Contexts["push"]
+          Contexts["open"]
         >
-      ): PushResult<ComponentFromLazy<Overlays[Key]>>;
+      ): OpenResult<ComponentFromLazy<Overlays[Key]>>;
       closeAll(): void;
       closeCurrent(): void;
       stack(): OverlayEntry<Overlays>[];

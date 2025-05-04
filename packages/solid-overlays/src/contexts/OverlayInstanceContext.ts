@@ -1,5 +1,5 @@
 import { ComponentProps, createContext, useContext } from "solid-js";
-import { PushArgs, PushResult } from "./OverlaysContext";
+import { OpenArgs, OpenResult } from "./OverlaysContext";
 import { LayoutComponent, OverlayComponent, OverlaysSchema } from "../types";
 
 type OverlayInstanceContext<
@@ -12,16 +12,16 @@ type OverlayInstanceContext<
     ) => {
       close(result?: ComponentType["defaultResult"]): void;
       updateOwnProps(props: Partial<ComponentProps<ComponentType>>): void;
-      pushSelf: ((
+      openSelf: ((
         props?: ComponentProps<ComponentType>,
         context?: PushContext,
-      ) => PushResult<ComponentType>) & {
+      ) => OpenResult<ComponentType>) & {
         keyOnly(
-          ...[props, context]: PushArgs<
+          ...[props, context]: OpenArgs<
             ComponentProps<ComponentType>,
             PushContext
           >
-        ): PushResult<ComponentType>;
+        ): OpenResult<ComponentType>;
       };
       onClose(handler: (result: ComponentType["defaultResult"]) => void): void;
 
@@ -50,10 +50,10 @@ export const useOverlayComponent = () => {
       "Attempted to call useOverlayComponent outside of OverlayInstanceContext.",
     );
 
-  const { close, pushSelf, index } = context(null as any);
+  const { close, openSelf, index } = context(null as any);
   return {
     close: close as () => void,
-    pushSelf: pushSelf as () => void,
+    openSelf: openSelf as () => void,
     index,
   };
 };

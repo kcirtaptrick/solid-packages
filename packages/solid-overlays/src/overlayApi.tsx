@@ -63,11 +63,11 @@ declare namespace overlayApi {
     type RenderFunction = (context: {
       renderOverlays(): JSX.Element;
     }) => JSX.Element;
-    type Props<Entry, PushContext, TRenderFunction extends RenderFunction> = {
+    type Props<Entry, OpenContext, TRenderFunction extends RenderFunction> = {
       data?: Entry[];
       onChange?(
-        data?: Props<Entry, PushContext, TRenderFunction>["data"],
-        pushContext?: PushContext,
+        data?: Props<Entry, OpenContext, TRenderFunction>["data"],
+        openContext?: OpenContext,
       ): void;
       children: JSX.Element | RequiredParameter<TRenderFunction>;
     };
@@ -76,13 +76,13 @@ declare namespace overlayApi {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     export interface Options<
       Overlays extends OverlaysSchema,
-      Context extends { push?: any; render?: any },
+      Context extends { open?: any; render?: any },
     > {
       hooks?: {
         open?<Key extends keyof Overlays>(
           key: Key,
           props: PropsFromLazy<Overlays[Key]>,
-          context?: Context["push"],
+          context?: Context["open"],
         ): void;
         close?<Key extends keyof Overlays>(
           key: Key,
@@ -110,8 +110,8 @@ const overlayApi = <
 
   return {
     create<
-      Contexts extends { push?: any; render?: any } = {
-        push?: unknown;
+      Contexts extends { open?: any; render?: any } = {
+        open?: unknown;
         render?: unknown;
       },
     >({
@@ -122,7 +122,7 @@ const overlayApi = <
         OverlaysContext<Overlays, Contexts>
       >;
       const OverlayInstanceContext = InstanceContextRef as Context<
-        OverlayInstanceContext<Overlays, DefaultLayoutType, Contexts["push"]>
+        OverlayInstanceContext<Overlays, DefaultLayoutType, Contexts["open"]>
       >;
       const useOverlaysController = () => {
         const context = useContext(OverlaysContext);
@@ -131,8 +131,8 @@ const overlayApi = <
             "Attempted to call useOverlaysController outside of OverlaysContext.",
           );
 
-        const { push, closeAll } = context;
-        return { push, closeAll };
+        const { open, closeAll } = context;
+        return { open, closeAll };
       };
 
       const useOverlaysBase = () => {
@@ -155,7 +155,7 @@ const overlayApi = <
             "Attempted to call useOverlay outside of OverlayInstanceContext.",
           );
 
-        const { close, updateOwnProps, pushSelf, withLayoutProps, onClose } =
+        const { close, updateOwnProps, openSelf, withLayoutProps, onClose } =
           context(Component);
 
         const { withBackdropProps } = useContext(OverlayLayoutContext)(
@@ -175,7 +175,7 @@ const overlayApi = <
           onClose,
           close,
           updateOwnProps,
-          pushSelf,
+          openSelf,
           withLayoutProps,
           withBackdropProps,
         };
@@ -208,7 +208,7 @@ const overlayApi = <
       >(
         _props: overlayApi.OverlaysProvider.Props<
           Entry,
-          Contexts["push"],
+          Contexts["open"],
           RenderFunction
         >,
       ) {
@@ -441,9 +441,9 @@ const overlayApi = <
                                   { ...props(), ...newProps },
                                 ]);
                               },
-                              pushSelf: Object.assign(
-                                (newProps: any, context: Contexts["push"]) =>
-                                  overlaysController.push(
+                              openSelf: Object.assign(
+                                (newProps: any, context: Contexts["open"]) =>
+                                  overlaysController.open(
                                     key,
                                     { ...props(), ...newProps },
                                     context,
@@ -451,9 +451,9 @@ const overlayApi = <
                                 {
                                   keyOnly: (
                                     props: any,
-                                    context: Contexts["push"],
+                                    context: Contexts["open"],
                                   ) =>
-                                    overlaysController.push(
+                                    overlaysController.open(
                                       key,
                                       props,
                                       context,
@@ -545,7 +545,7 @@ const overlayApi = <
           ContextType<typeof OverlaysContext>,
           undefined
         > = {
-          push(key, props: any = {}, context) {
+          open(key, props: any = {}, context) {
             hooks.open?.(key, props, context);
 
             const componentLoad = signalValuePromise(

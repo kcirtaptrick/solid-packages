@@ -7,7 +7,7 @@ declare module "node_modules/vite/types/importGlob" {
       options?: ImportGlobOptions<false, string>,
     ): {
       "./Basic.tsx": () => Promise<typeof import("./Basic")>;
-      "./WithPushSelf.tsx": () => Promise<typeof import("./WithPushSelf")>;
+      "./WithOpenSelf.tsx": () => Promise<typeof import("./WithOpenSelf")>;
     };
   }
 }

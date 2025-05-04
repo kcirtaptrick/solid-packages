@@ -13,17 +13,17 @@ const App: Component = () => {
           <div class={styles.App}>
             <button
               onClick={() => {
-                overlays.push("Basic");
+                overlays.open("Basic");
               }}
             >
               Basic
             </button>
             <button
               onClick={() => {
-                overlays.push("WithPushSelf");
+                overlays.open("WithOpenSelf");
               }}
             >
-              With pushSelf
+              With openSelf
             </button>
             {renderOverlays()}
           </div>
