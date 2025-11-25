@@ -285,7 +285,7 @@ const overlayApi = <
             result ??
               (
                 componentByKey()[
-                  stack().find(([, _id]) => id === _id)![0]
+                  stack().find(findById(id))![0]
                 ] as OverlayComponent
               ).defaultResult,
           );
@@ -588,7 +588,7 @@ const overlayApi = <
           },
           closeAll() {
             for (const id of Object.keys(stateById())) {
-              remove(id as any as Id);
+              remove(+id);
             }
           },
           closeCurrent() {
