@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.5.2
+
+### Patch Changes
+
+- 8ffeac4: Fix closeAll id comparison
+
 ## 0.5.1
 
 ### Patch Changes
