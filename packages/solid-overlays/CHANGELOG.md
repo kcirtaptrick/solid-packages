@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.5.3
+
+### Patch Changes
+
+- aebbbe4: Add close to overlay handle + guard bad updateOwnProps access
+
 ## 0.5.2
 
 ### Patch Changes
