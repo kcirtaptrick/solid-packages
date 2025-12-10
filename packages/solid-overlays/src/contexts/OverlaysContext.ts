@@ -18,6 +18,7 @@ export type OpenArgs<Props, Context> = RequiredKeys<Props> extends never
 export type OpenResult<Component extends OverlayComponent> = {
   result: Promise<Component["defaultResult"]>;
   componentLoad: Promise<void>;
+  close(result?: Component["defaultResult"]): void;
 };
 
 type OverlaysContext<

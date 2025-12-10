@@ -94,6 +94,8 @@ declare namespace overlayApi {
   }
 }
 
+let currentId = -1;
+
 const overlayApi = <
   Overlays extends OverlaysSchema,
   DefaultLayoutType extends LayoutComponent = LayoutComponent,
@@ -382,7 +384,7 @@ const overlayApi = <
                 }
               >
                 {(id, index) => {
-                  const key = entryById()[id]![0];
+                  const key = untrack(() => entryById()[id]![0]);
                   const props = () => entryById()[id]![2];
 
                   // Wrap in reactive context to allow guards
@@ -435,6 +437,14 @@ const overlayApi = <
                                 remove(id, result);
                               },
                               updateOwnProps(newProps) {
+                                if (!stack().some(findById(id))) {
+                                  console.warn(
+                                    `Attempted to call updateOwnProps on removed overlay ${String(
+                                      key,
+                                    )}: ${JSON.stringify(newProps)}`,
+                                  );
+                                  return;
+                                }
                                 setStack.find(findById(id), [
                                   key,
                                   id,
@@ -558,6 +568,10 @@ const overlayApi = <
               resolveResult = resolve;
             });
 
+            const maxId = Math.max(currentId, ...stack().map(([, id]) => id));
+            const id = maxId + 1;
+            currentId = id;
+
             (async () => {
               const Component = componentByKey()[key];
               if (Component) {
@@ -568,9 +582,6 @@ const overlayApi = <
                 );
                 if (limit === "once-per-session") return resolveResult(null);
               }
-
-              const maxId = Math.max(0, ...stack().map(([, id]) => id));
-              const id = maxId + 1;
 
               setStack.push([key, id, props]);
               setStateById.deep[id]!.onClose(() => (result) => {
@@ -584,6 +595,9 @@ const overlayApi = <
             return {
               result,
               componentLoad: componentLoad.then(() => {}),
+              close(result) {
+                remove(id, result);
+              },
             };
           },
           closeAll() {
