@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.6.1
+
+### Patch Changes
+
+- a672590: Fix overlay close crash
+
 ## 0.6.0
 
 ### Minor Changes
