@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.6.0
+
+### Minor Changes
+
+- 70c330c: Forward owner through useOverlaysController to overlays
+
 ## 0.5.3
 
 ### Patch Changes
