@@ -390,7 +390,7 @@ const overlayApi = <
               >
                 {(id, index) => {
                   const key = untrack(() => entryById()[id]![0]);
-                  const props = () => entryById()[id]![2];
+                  const props = createMemo(() => entryById()[id]![2]);
 
                   // Wrap in reactive context to allow guards
                   return (

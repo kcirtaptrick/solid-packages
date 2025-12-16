@@ -1,4 +1,10 @@
-import { ComponentProps, createContext, useContext } from "solid-js";
+import {
+  ComponentProps,
+  createContext,
+  getOwner,
+  Owner,
+  useContext,
+} from "solid-js";
 import { OpenArgs, OpenResult } from "./OverlaysContext";
 import { LayoutComponent, OverlayComponent, OverlaysSchema } from "../types";
 
@@ -8,6 +14,7 @@ type OverlayInstanceContext<
   OpenContext,
 > =
   | (<ComponentType extends OverlayComponent>(
+      owner: Owner,
       Component: ComponentType,
     ) => {
       close(result?: ComponentType["defaultResult"]): void;
@@ -50,7 +57,7 @@ export const useOverlayComponent = () => {
       "Attempted to call useOverlayComponent outside of OverlayInstanceContext.",
     );
 
-  const { close, openSelf, index } = context(null as any);
+  const { close, openSelf, index } = context(getOwner()!, null as any);
   return {
     close: close as () => void,
     openSelf: openSelf as () => void,
