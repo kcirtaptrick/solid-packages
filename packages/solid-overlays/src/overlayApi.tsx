@@ -12,6 +12,9 @@ import {
   createComputed,
   untrack,
   Context,
+  getOwner,
+  Owner,
+  runWithOwner,
 } from "solid-js";
 import OverlayInstanceContext, {
   useOverlayComponent,
@@ -133,7 +136,7 @@ const overlayApi = <
             "Attempted to call useOverlaysController outside of OverlaysContext.",
           );
 
-        const { open, closeAll } = context;
+        const { open, closeAll } = context(getOwner()!);
         return { open, closeAll };
       };
 
@@ -144,7 +147,7 @@ const overlayApi = <
             "Attempted to call useOverlaysBase outside of OverlaysContext.",
           );
 
-        const { render, stack, closeCurrent } = context;
+        const { render, stack, closeCurrent } = context(getOwner()!);
         return { render, stack, closeCurrent };
       };
 
@@ -158,7 +161,7 @@ const overlayApi = <
           );
 
         const { close, updateOwnProps, openSelf, withLayoutProps, onClose } =
-          context(Component);
+          context(getOwner()!, Component);
 
         const { withBackdropProps } = useContext(OverlayLayoutContext)(
           (Component.Layout || DefaultLayout!) as Exclude<
@@ -225,6 +228,7 @@ const overlayApi = <
         );
 
         interface InternalOverlayState {
+          owner: Owner;
           isPresent: boolean;
           onClose(result: any): void;
           closeListeners: ((result: any) => void)[];
@@ -255,6 +259,7 @@ const overlayApi = <
               stack().map(([, id]) => [
                 id,
                 prev[id] || {
+                  owner: undefined!,
                   isPresent: true,
                   closeListeners: [],
                   onClose() {},
@@ -423,9 +428,13 @@ const overlayApi = <
                         const state = () => stateById()[id]!;
                         const isPresent = createMemo(() => state().isPresent);
 
-                        return (
+                        const owner = createMemo(() => state().owner);
+
+                        if (!owner()) return null;
+
+                        return runWithOwner(owner(), () => (
                           <OverlayInstanceContext.Provider
-                            value={() => ({
+                            value={(owner) => ({
                               index,
                               onClose(handler) {
                                 setStateById.deep[id]!.closeListeners([
@@ -453,7 +462,7 @@ const overlayApi = <
                               },
                               openSelf: Object.assign(
                                 (newProps: any, context: Contexts["open"]) =>
-                                  overlaysController.open(
+                                  overlaysController(owner).open(
                                     key,
                                     { ...props(), ...newProps },
                                     context,
@@ -463,7 +472,7 @@ const overlayApi = <
                                     props: any,
                                     context: Contexts["open"],
                                   ) =>
-                                    overlaysController.open(
+                                    overlaysController(owner).open(
                                       key,
                                       props,
                                       context,
@@ -541,7 +550,7 @@ const overlayApi = <
                               </Layout>
                             </OverlayLayoutContext.Provider>
                           </OverlayInstanceContext.Provider>
-                        );
+                        ));
                       })()}
                     </>
                   );
@@ -554,7 +563,7 @@ const overlayApi = <
         const overlaysController: Exclude<
           ContextType<typeof OverlaysContext>,
           undefined
-        > = {
+        > = (owner: Owner) => ({
           open(key, props: any = {}, context) {
             hooks.open?.(key, props, context);
 
@@ -584,6 +593,7 @@ const overlayApi = <
               }
 
               setStack.push([key, id, props]);
+              setStateById.deep[id]!.owner(owner);
               setStateById.deep[id]!.onClose(() => (result) => {
                 for (const listener of stateById()[id]!.closeListeners) {
                   listener(result);
@@ -611,7 +621,7 @@ const overlayApi = <
           current,
           render: renderOverlays,
           stack,
-        };
+        });
 
         return (
           <OverlaysContext.Provider value={overlaysController}>

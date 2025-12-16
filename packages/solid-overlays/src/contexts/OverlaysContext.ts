@@ -1,4 +1,4 @@
-import { createContext, JSX } from "solid-js";
+import { createContext, JSX, Owner } from "solid-js";
 import {
   ComponentFromLazy,
   OverlayComponent,
@@ -25,7 +25,7 @@ type OverlaysContext<
   Overlays extends OverlaysSchema,
   Contexts extends { open?: any; render?: any },
 > =
-  | {
+  | ((owner: Owner) => {
       open<Key extends keyof Overlays>(
         key: Key,
         ...[props, context]: OpenArgs<
@@ -38,7 +38,7 @@ type OverlaysContext<
       stack(): OverlayEntry<Overlays>[];
       current(): { id: number; index: number };
       render(context?: Contexts["render"]): JSX.Element;
-    }
+    })
   | undefined;
 
 const OverlaysContext = createContext<OverlaysContext<any, any>>();
