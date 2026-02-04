@@ -6,6 +6,7 @@ import {
   OverlaysSchema,
   PropsFromLazy,
 } from "../types";
+import overlayApi from "src/overlayApi";
 
 type RequiredKeys<T> = {
   [Key in keyof T]-?: {} extends Pick<T, Key> ? never : Key;

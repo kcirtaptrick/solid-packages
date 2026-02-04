@@ -99,13 +99,14 @@ declare namespace overlayApi {
 
 let currentId = -1;
 
-const overlayApi = <
+const contextSymbol = Symbol("overlayApi.context");
+function overlayApi<
   Overlays extends OverlaysSchema,
   DefaultLayoutType extends LayoutComponent = LayoutComponent,
 >(
   overlays: Overlays,
   { DefaultLayout }: overlayApi.Options<DefaultLayoutType> = {},
-) => {
+) {
   const [componentByKey, setComponentByKey] = createObject<
     Partial<Record<keyof Overlays, OverlayComponent | "pending">>
   >({});
@@ -623,6 +624,9 @@ const overlayApi = <
           stack,
         });
 
+        // @ts-expect-error
+        overlaysController[contextSymbol] = true;
+
         return (
           <OverlaysContext.Provider value={overlaysController}>
             {(() => {
@@ -648,6 +652,31 @@ const overlayApi = <
       };
     },
   };
-};
+}
 
 export default overlayApi;
+
+export const useAnyOverlaysController = <
+  Overlays extends OverlaysSchema,
+  Contexts extends { open?: any } = {},
+>() => {
+  const owner = getOwner();
+  if (!owner)
+    throw new Error(
+      "Attempted to call useAnyOverlaysController outside of a OverlaysProvider",
+    );
+
+  const context: OverlaysContext<Overlays, Contexts> | undefined =
+    Reflect.ownKeys(owner.context)
+      .map((key) => owner.context[key])
+      .reverse()
+      .find((context) => context[contextSymbol]);
+
+  if (!context)
+    throw new Error(
+      "Attempted to call useAnyOverlaysController outside of a OverlaysProvider",
+    );
+
+  const { open, closeAll } = context(owner);
+  return { open, closeAll };
+};
