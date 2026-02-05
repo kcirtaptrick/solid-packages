@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.6.3
+
+### Patch Changes
+
+- 75b3b00: useAnyOverlay
+
 ## 0.6.2
 
 ### Patch Changes
