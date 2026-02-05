@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.6.2
+
+### Patch Changes
+
+- 85a0e9a: useAnyOverlaysController
+
 ## 0.6.1
 
 ### Patch Changes
