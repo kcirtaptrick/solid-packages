@@ -100,6 +100,8 @@ declare namespace overlayApi {
 let currentId = -1;
 
 const contextSymbol = Symbol("overlayApi.context");
+const instanceContextSymbol = Symbol("overlayApi.instanceContext");
+
 function overlayApi<
   Overlays extends OverlaysSchema,
   DefaultLayoutType extends LayoutComponent = LayoutComponent,
@@ -435,57 +437,60 @@ function overlayApi<
 
                         return runWithOwner(owner(), () => (
                           <OverlayInstanceContext.Provider
-                            value={(owner) => ({
-                              index,
-                              onClose(handler) {
-                                setStateById.deep[id]!.closeListeners([
-                                  ...(stateById()[id]?.closeListeners || []),
-                                  handler,
-                                ]);
-                              },
-                              close(result) {
-                                remove(id, result);
-                              },
-                              updateOwnProps(newProps) {
-                                if (!stack().some(findById(id))) {
-                                  console.warn(
-                                    `Attempted to call updateOwnProps on removed overlay ${String(
-                                      key,
-                                    )}: ${JSON.stringify(newProps)}`,
-                                  );
-                                  return;
-                                }
-                                setStack.find(findById(id), [
-                                  key,
-                                  id,
-                                  { ...props(), ...newProps },
-                                ]);
-                              },
-                              openSelf: Object.assign(
-                                (newProps: any, context: Contexts["open"]) =>
-                                  overlaysController(owner).open(
+                            value={Object.assign(
+                              ((owner) => ({
+                                index,
+                                onClose(handler) {
+                                  setStateById.deep[id]!.closeListeners([
+                                    ...(stateById()[id]?.closeListeners || []),
+                                    handler,
+                                  ]);
+                                },
+                                close(result) {
+                                  remove(id, result);
+                                },
+                                updateOwnProps(newProps) {
+                                  if (!stack().some(findById(id))) {
+                                    console.warn(
+                                      `Attempted to call updateOwnProps on removed overlay ${String(
+                                        key,
+                                      )}: ${JSON.stringify(newProps)}`,
+                                    );
+                                    return;
+                                  }
+                                  setStack.find(findById(id), [
                                     key,
+                                    id,
                                     { ...props(), ...newProps },
-                                    context,
-                                  ),
-                                {
-                                  keyOnly: (
-                                    props: any,
-                                    context: Contexts["open"],
-                                  ) =>
+                                  ]);
+                                },
+                                openSelf: Object.assign(
+                                  (newProps: any, context: Contexts["open"]) =>
                                     overlaysController(owner).open(
                                       key,
-                                      props,
+                                      { ...props(), ...newProps },
                                       context,
                                     ),
+                                  {
+                                    keyOnly: (
+                                      props: any,
+                                      context: Contexts["open"],
+                                    ) =>
+                                      overlaysController(owner).open(
+                                        key,
+                                        props,
+                                        context,
+                                      ),
+                                  },
+                                ) as any,
+                                withLayoutProps(props) {
+                                  createComputed(() => {
+                                    setStateById.deep[id]?.layoutProps(props());
+                                  });
                                 },
-                              ) as any,
-                              withLayoutProps(props) {
-                                createComputed(() => {
-                                  setStateById.deep[id]?.layoutProps(props());
-                                });
-                              },
-                            })}
+                              })) satisfies (typeof OverlayInstanceContext)["defaultValue"],
+                              { [instanceContextSymbol]: true },
+                            )}
                           >
                             <OverlayLayoutContext.Provider
                               value={() => ({
@@ -679,4 +684,53 @@ export const useAnyOverlaysController = <
 
   const { open, closeAll } = context(owner);
   return { open, closeAll };
+};
+
+export const useAnyOverlay = <
+  ComponentType extends OverlayComponent,
+  Overlays extends OverlaysSchema,
+  Contexts extends { open?: any } = {},
+>(
+  Component: ComponentType,
+) => {
+  const owner = getOwner();
+  if (!owner)
+    throw new Error(
+      "Attempted to call useAnyOverlay outside of a OverlaysProvider",
+    );
+
+  const instanceContext:
+    | OverlayInstanceContext<Overlays, LayoutComponent, Contexts["open"]>
+    | undefined = Reflect.ownKeys(owner.context)
+    .map((key) => owner.context[key])
+    .reverse()
+    .find((context) => context[instanceContextSymbol]);
+
+  if (!instanceContext)
+    throw new Error(
+      "Attempted to call useAnyOverlay outside of a OverlayInstanceContext",
+    );
+
+  const { close, updateOwnProps, openSelf, withLayoutProps, onClose } =
+    instanceContext(getOwner()!, Component);
+
+  const { withBackdropProps } = useContext(OverlayLayoutContext)(
+    Component.Layout as Extract<
+      Exclude<ComponentType["Layout"], undefined>,
+      LayoutComponent
+    >,
+  );
+
+  const res = {
+    onClose,
+    close,
+    updateOwnProps,
+    openSelf,
+    withLayoutProps,
+    withBackdropProps,
+  };
+
+  return res as unknown extends ComponentType["Layout"]
+    ? Omit<typeof res, "withLayoutProps" | "withBackdropProps">
+    : typeof res;
 };
