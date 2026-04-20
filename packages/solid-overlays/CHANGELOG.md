@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.6.5
+
+### Patch Changes
+
+- b6ded69: Fix cleanup disposal reference
+
 ## 0.6.4
 
 ### Patch Changes
