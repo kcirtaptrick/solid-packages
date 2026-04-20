@@ -15,6 +15,8 @@ import {
   getOwner,
   Owner,
   runWithOwner,
+  createRoot,
+  onCleanup,
 } from "solid-js";
 import OverlayInstanceContext, {
   useOverlayComponent,
@@ -211,6 +213,11 @@ function overlayApi<
       const getLayout = (Component: OverlayComponent): LayoutComponent =>
         Component?.Layout || DefaultLayout || IdentityLayout;
 
+      const getBackdrop = (
+        Component: OverlayComponent,
+      ): BackdropComponent | undefined =>
+        Component.Backdrop || getLayout(Component).Backdrop;
+
       function OverlaysProvider<
         RenderFunction extends overlayApi.OverlaysProvider.RenderFunction,
       >(
@@ -322,7 +329,7 @@ function overlayApi<
                 const { validateRenderContext } = getComponentConfig(Component);
                 if (!validateRenderContext(renderContext)) return;
 
-                const { Backdrop } = getLayout(Component);
+                const Backdrop = getBackdrop(Component);
                 if (!Backdrop) return;
 
                 if (!map.has(Backdrop) || i <= current().index) {
@@ -367,7 +374,7 @@ function overlayApi<
                           ) =>
                             Component &&
                             (Component === "pending" ||
-                              getLayout(Component).Backdrop === Backdrop))(),
+                              getBackdrop(Component) === Backdrop))(),
                       ),
                       closeCurrent() {
                         const [, overlayId] =
@@ -435,128 +442,140 @@ function overlayApi<
 
                         if (!owner()) return null;
 
-                        return runWithOwner(owner(), () => (
-                          <OverlayInstanceContext.Provider
-                            value={Object.assign(
-                              ((owner) => ({
-                                index,
-                                onClose(handler) {
-                                  setStateById.deep[id]!.closeListeners([
-                                    ...(stateById()[id]?.closeListeners || []),
-                                    handler,
-                                  ]);
-                                },
-                                close(result) {
-                                  remove(id, result);
-                                },
-                                updateOwnProps(newProps) {
-                                  if (!stack().some(findById(id))) {
-                                    console.warn(
-                                      `Attempted to call updateOwnProps on removed overlay ${String(
-                                        key,
-                                      )}: ${JSON.stringify(newProps)}`,
-                                    );
-                                    return;
-                                  }
-                                  setStack.find(findById(id), [
-                                    key,
-                                    id,
-                                    { ...props(), ...newProps },
-                                  ]);
-                                },
-                                openSelf: Object.assign(
-                                  (newProps: any, context: Contexts["open"]) =>
-                                    overlaysController(owner).open(
+                        let dispose: () => void;
+                        onCleanup(dispose!);
+
+                        return createRoot((_dispose) => {
+                          dispose = _dispose;
+                          return (
+                            <OverlayInstanceContext.Provider
+                              value={Object.assign(
+                                ((owner) => ({
+                                  index,
+                                  onClose(handler) {
+                                    setStateById.deep[id]!.closeListeners([
+                                      ...(stateById()[id]?.closeListeners ||
+                                        []),
+                                      handler,
+                                    ]);
+                                  },
+                                  close(result) {
+                                    remove(id, result);
+                                  },
+                                  updateOwnProps(newProps) {
+                                    if (!stack().some(findById(id))) {
+                                      console.warn(
+                                        `Attempted to call updateOwnProps on removed overlay ${String(
+                                          key,
+                                        )}: ${JSON.stringify(newProps)}`,
+                                      );
+                                      return;
+                                    }
+                                    setStack.find(findById(id), [
                                       key,
+                                      id,
                                       { ...props(), ...newProps },
-                                      context,
-                                    ),
-                                  {
-                                    keyOnly: (
-                                      props: any,
+                                    ]);
+                                  },
+                                  openSelf: Object.assign(
+                                    (
+                                      newProps: any,
                                       context: Contexts["open"],
                                     ) =>
                                       overlaysController(owner).open(
                                         key,
-                                        props,
+                                        { ...props(), ...newProps },
                                         context,
                                       ),
+                                    {
+                                      keyOnly: (
+                                        props: any,
+                                        context: Contexts["open"],
+                                      ) =>
+                                        overlaysController(owner).open(
+                                          key,
+                                          props,
+                                          context,
+                                        ),
+                                    },
+                                  ) as any,
+                                  withLayoutProps(props) {
+                                    createComputed(() => {
+                                      setStateById.deep[id]?.layoutProps(
+                                        props(),
+                                      );
+                                    });
                                   },
-                                ) as any,
-                                withLayoutProps(props) {
-                                  createComputed(() => {
-                                    setStateById.deep[id]?.layoutProps(props());
-                                  });
-                                },
-                              })) satisfies (typeof OverlayInstanceContext)["defaultValue"],
-                              { [instanceContextSymbol]: true },
-                            )}
-                          >
-                            <OverlayLayoutContext.Provider
-                              value={() => ({
-                                close() {
-                                  remove(id);
-                                },
-                                withBackdropProps(props) {
-                                  createComputed(() => {
-                                    setStateById.deep[id]!.backdropProps(
-                                      props(),
-                                    );
-                                  });
-                                },
-                                isPresent,
-                                safeToRemove() {
-                                  if (isPresent())
-                                    throw new Error(
-                                      '"safeToRemove" called while component is still present',
-                                    );
-
-                                  if (!(id in entryById()))
-                                    throw new Error(
-                                      `Already called "safeToRemove" in ${
-                                        key as any
-                                      }`,
-                                    );
-
-                                  setStack(
-                                    stack().filter(
-                                      ([, entryId]) => entryId !== id,
-                                    ),
-                                  );
-                                },
-                                id,
-                                index,
-                                isCurrent: () => current().id === id,
-                                getRelative: (delta) =>
-                                  createMemo(() => {
-                                    const i =
-                                      stack().findIndex(findById(id)) + delta;
-                                    const entry = stack()[i];
-
-                                    if (!entry) return null;
-
-                                    const [key, , props] = entry;
-
-                                    return {
-                                      key,
-                                      id,
-                                      props,
-                                      // Prevent stack().findIndex from running on unrelated updates
-                                      ...createMemo(() => stateById()[id]!)(),
-                                      Component: componentByKey()[
-                                        key
-                                      ] as OverlayComponent,
-                                    };
-                                  })(),
-                                root: { current },
-                              })}
+                                })) satisfies (typeof OverlayInstanceContext)["defaultValue"],
+                                { [instanceContextSymbol]: true },
+                              )}
                             >
-                              <Layout {...state()?.layoutProps}>
-                                <Component {...props()} />
-                              </Layout>
-                            </OverlayLayoutContext.Provider>
-                          </OverlayInstanceContext.Provider>
-                        ));
+                              <OverlayLayoutContext.Provider
+                                value={() => ({
+                                  close() {
+                                    remove(id);
+                                  },
+                                  withBackdropProps(props) {
+                                    createComputed(() => {
+                                      setStateById.deep[id]!.backdropProps(
+                                        props(),
+                                      );
+                                    });
+                                  },
+                                  isPresent,
+                                  safeToRemove() {
+                                    if (isPresent())
+                                      throw new Error(
+                                        '"safeToRemove" called while component is still present',
+                                      );
+
+                                    if (!(id in entryById()))
+                                      throw new Error(
+                                        `Already called "safeToRemove" in ${
+                                          key as any
+                                        }`,
+                                      );
+
+                                    setStack(
+                                      stack().filter(
+                                        ([, entryId]) => entryId !== id,
+                                      ),
+                                    );
+                                  },
+                                  id,
+                                  index,
+                                  isCurrent: () => current().id === id,
+                                  getRelative: (delta) =>
+                                    createMemo(() => {
+                                      const i =
+                                        stack().findIndex(findById(id)) + delta;
+                                      const entry = stack()[i];
+
+                                      if (!entry) return null;
+
+                                      const [key, , props] = entry;
+
+                                      return {
+                                        key,
+                                        id,
+                                        props,
+                                        // Prevent stack().findIndex from running on unrelated updates
+                                        ...createMemo(() => stateById()[id]!)(),
+                                        Component: componentByKey()[
+                                          key
+                                        ] as OverlayComponent,
+                                      };
+                                    })(),
+                                  root: { current },
+                                })}
+                              >
+                                <Layout {...state()?.layoutProps}>
+                                  <Component {...props()} />
+                                </Layout>
+                              </OverlayLayoutContext.Provider>
+                            </OverlayInstanceContext.Provider>
+                          );
+                        }, owner());
                       })()}
                     </>
                   );

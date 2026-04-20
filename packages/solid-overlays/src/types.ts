@@ -19,6 +19,7 @@ export type BackdropComponent = Component<any>;
 
 export type OverlayComponent = Component<any> & {
   Layout?: LayoutComponent;
+  Backdrop?: BackdropComponent;
   config?: OverlayConfig;
   defaultResult?: any;
 };
