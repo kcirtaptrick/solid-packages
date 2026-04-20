@@ -1,5 +1,11 @@
 # solid-overlays
 
+## 0.6.4
+
+### Patch Changes
+
+- 0711f16: Use createRoot instead of runWithOwner to prevent early cleanup, add Component.Backdrop support
+
 ## 0.6.3
 
 ### Patch Changes
