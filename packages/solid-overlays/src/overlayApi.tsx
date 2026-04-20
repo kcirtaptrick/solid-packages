@@ -443,7 +443,7 @@ function overlayApi<
                         if (!owner()) return null;
 
                         let dispose: () => void;
-                        onCleanup(dispose!);
+                        onCleanup(() => dispose());
 
                         return createRoot((_dispose) => {
                           dispose = _dispose;
